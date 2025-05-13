@@ -1,31 +1,4 @@
-/* 鼠标样式 */
-/* 定义CSS变量 */
-:root {
-  --theme-color: rgb(57, 197, 187); /* 定义主题色变量 */
-}
-
-#cursor {
-  position: fixed;
-  width: 16px;
-  height: 16px;
-  background: var(--theme-color); /* 使用CSS变量 */
-  border-radius: 8px;
-  opacity: 0.25;
-  z-index: 10086;
-  pointer-events: none;
-  transition: all 0.2s ease-in-out; /* 简写transition属性 */
-}
-
-#cursor.hidden {
-  opacity: 0;
-}
-
-#cursor:hover { /* 修正为正确的:hover伪类 */
-  opacity: 0.1;
-  transform: scale(2.5);
-}
-
-#cursor:active { /* 修正为正确的:active伪类 */
-  opacity: 0.5;
-  transform: scale(0.5);
+/* 核武器级清除 */
+footer.footer, [data-footer] {
+  display: none !important;
 }
