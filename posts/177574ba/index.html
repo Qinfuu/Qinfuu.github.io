@@ -1,0 +1,287 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>ollvm | 爱学习居士</title><meta name="author" content="爱学习居士"><meta name="copyright" content="爱学习居士"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="其实这学期初就接触到零碎的东西，但是五月初才完全实践了一下，记录一下&#x2F;(^o^)&#x2F;~ ollvm与llvmollvm是 llvm编译器框架的一种扩展，它用于实现 代码混淆，即故意使程序的源代码或二进制代码变得更加难以理解、逆向工程或破解。 ollvm的混淆是通过修改 llvm IR 实现的，整个项目包含了三个相对独立的LLVM pass，每个pass实现了一种混淆方式。 oll">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ollvm">
+<meta property="og:url" content="http://example.com/posts/177574ba/index.html">
+<meta property="og:site_name" content="爱学习居士">
+<meta property="og:description" content="其实这学期初就接触到零碎的东西，但是五月初才完全实践了一下，记录一下&#x2F;(^o^)&#x2F;~ ollvm与llvmollvm是 llvm编译器框架的一种扩展，它用于实现 代码混淆，即故意使程序的源代码或二进制代码变得更加难以理解、逆向工程或破解。 ollvm的混淆是通过修改 llvm IR 实现的，整个项目包含了三个相对独立的LLVM pass，每个pass实现了一种混淆方式。 oll">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/image/avatar.jpg">
+<meta property="article:published_time" content="2025-05-29T15:46:43.000Z">
+<meta property="article:modified_time" content="2025-05-30T10:08:43.010Z">
+<meta property="article:author" content="爱学习居士">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/image/avatar.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "ollvm",
+  "url": "http://example.com/posts/177574ba/",
+  "image": "http://example.com/image/avatar.jpg",
+  "datePublished": "2025-05-29T15:46:43.000Z",
+  "dateModified": "2025-05-30T10:08:43.010Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "爱学习居士",
+      "url": "http://example.com/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favixon.jpg"><link rel="canonical" href="http://example.com/posts/177574ba/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'ollvm',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/custom_cursor.css"><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-image: url(/image/photo.png);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/image/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">2</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">1</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/shuoshuo/"><i class="fa-fw far fa-comments"></i><span> 叽里呱啦</span></a></li><li><a class="site-page child" href="/music/"><i class="fa-fw fa fa-music"></i><span> 音乐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-color: rgba(0, 0, 0, 0);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/avatar.jpg" alt="Logo"><span class="site-name">爱学习居士</span></a><a class="nav-page-title" href="/"><span class="site-name">ollvm</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/shuoshuo/"><i class="fa-fw far fa-comments"></i><span> 叽里呱啦</span></a></li><li><a class="site-page child" href="/music/"><i class="fa-fw fa fa-music"></i><span> 音乐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">ollvm</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-05-29T15:46:43.000Z" title="发表于 2025-05-29 23:46:43">2025-05-29</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-05-30T10:08:43.010Z" title="更新于 2025-05-30 18:08:43">2025-05-30</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E4%BB%8E0%E5%BC%80%E5%A7%8B%E7%9A%84re%E4%B8%96%E7%95%8C/">从0开始的re世界</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>其实这学期初就接触到零碎的东西，但是五月初才完全实践了一下，记录一下&#x2F;(^o^)&#x2F;~</p>
+<h2 id="ollvm与llvm"><a href="#ollvm与llvm" class="headerlink" title="ollvm与llvm"></a>ollvm与llvm</h2><p>ollvm是 llvm编译器框架的一种扩展，它用于实现 代码混淆，即故意使程序的源代码或二进制代码变得更加难以理解、逆向工程或破解。</p>
+<p>ollvm的混淆是通过修改 llvm IR 实现的，整个项目包含了三个相对独立的LLVM pass，每个pass实现了一种混淆方式。</p>
+<p>ollvm其衍生技术仍然是当前移动应用安全加固（包括iOS和Android）中的重要工具之一，尤其是在代码混淆和反逆向工程领域。</p>
+<p>当然啦，技术在不断的更新先做这方面的了解。</p>
+<p><img src="/../textimg/ollvm.assets/1748534946666.jpg" alt="1748534946666"></p>
+<p>这里有几个概念记一下：</p>
+<h3 id="IR"><a href="#IR" class="headerlink" title="IR"></a>IR</h3><p>IR 介于高级语言（如C&#x2F;C++）和机器码之间，抽象了硬件细节，使编译器能跨平台优化。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">源代码 → IR → 目标机器码（x86/ARM等）</span><br></pre></td></tr></table></figure>
+
+<p>LLVM IR有两种文件格式.ll和.bc，.ll 文件和 .bc 文件都是 LLVM 中间表示的不同表示形式。</p>
+<p>.ll 文件是文本形式的可读表示，方便分析和调试</p>
+<p>.bc 文件是二进制形式的紧凑表示</p>
+<p>PS：之前遇到过将.bc文件转化成exe文件的，记一下，最后exe文件在含clang的bin文件里</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">路径</span><br><span class="line"></span><br><span class="line">D:/clang+llvm-20.1.2-x86_64-pc-windows-msvc/clang+llvm-20.1.2-x86_64-pc-windows-msvc/bin&gt;</span><br><span class="line"></span><br><span class="line">命令</span><br><span class="line"></span><br><span class="line">clang &quot;D:/练习/Dragon (1)/Dragon.bc&quot; -o dragon.exe</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="pass"><a href="#pass" class="headerlink" title="pass"></a>pass</h3><p>LLVM的pass框架是LLVM系统的一个很重要的部分。LLVM的优化和转换工作就是由多个pass来一起完成得。</p>
+<p>每个Pass负责一项具体任务，有优化、混淆等等</p>
+<p>怎么理解呢</p>
+<p>感觉就像流水线上的工人每个人有自己干的活</p>
+<h3 id="clang"><a href="#clang" class="headerlink" title="clang"></a>clang</h3><p>LLVM与Clang是C&#x2F;C++编译器套件。对于整个LLVM的框架来说，包含了Clang，因为Clang是LLVM的框架的一部分，是它的一个C&#x2F;C++的前端。功能的角度来说，LLVM可以认为是一个编译器的后端，而clang是一个编译器的前端。</p>
+<p>一个编译器前端想要程序最终变成可执行文件，是缺少不了对编译器后端的介绍的。</p>
+<h2 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h2><p>Ubuntu 24.04（内存4G，硬盘100G，磁盘空间放大一点可以省去硬盘扩容的操作，这个还蛮重要的因为我的是新的pwn环境捏，所以躲掉了这边）</p>
+<p><strong>换成国内源</strong></p>
+<p>以下命令之后删除原有内容，替换为阿里源（注意Ubuntu 24.04 Noble Numbat 的源）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cp /etc/apt/sources.list /etc/apt/sources.list.bak</span><br><span class="line">vim /etc/apt/sources.list</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>编译工具</strong>：cmake , gcc , g++</p>
+<p>cmake的版本，gcc、g++都要为8.x的不然无法编译</p>
+<p><img src="/../textimg/ollvm.assets/image-20250521114954048.png" alt="image-20250521114954048"></p>
+<p>可以先下载一下8版本的，然后调整一下优先级</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 80</span><br><span class="line">sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-8 80</span><br><span class="line">sudo update-alternatives --config gcc  # 选择 gcc-8</span><br><span class="line">sudo update-alternatives --config g++  # 选择 g++-8</span><br></pre></td></tr></table></figure>
+
+<p>啊哈哈</p>
+<p><img src="/../textimg/ollvm.assets/image-20250521115839783.png" alt="image-20250521115839783"></p>
+<p>在llvm编译的时候常常会遇到要扩容的问题，如果编译有问题的话多数是这</p>
+<p>先硬盘扩容<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_34160841/article/details/113058756">vmware：ubuntu虚拟机如何扩容？_vmware ubuntu scsi硬盘扩容-CSDN博客</a></p>
+<p>再swap分区扩容[如何在Ubuntu上增加swap交换空间_Linux教程_Linux公社-Linux系统门户网站](<a target="_blank" rel="noopener" href="https://www.linuxidc.com/Linux/2019-07/159580.htm#:~:text=%E5%A6%82%E4%BD%95%E5%9C%A8Ubuntu%E4%B8%8A%E5%A2%9E%E5%8A%A0swap%E4%BA%A4%E6%8D%A2%E7%A9%BA%E9%97%B4">https://www.linuxidc.com/Linux/2019-07/159580.htm#:~:text=如何在Ubuntu上增加swap交换空间</a> 1 第2步：检查分区上的可用空间 2 第3步：在Ubuntu中创建swap文件 3,第4步：在Ubuntu中启用swap文件 4 第5步：在Ubuntu中永久挂载交换文件 5 第6步：调整Ubuntu中的交换设置 6 第7步：删除Ubuntu中的交换文件)</p>
+<p><strong>ollvm的搭建</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone -b llvm-4.0 --depth=1 https://github.com/obfuscator-llvm/obfuscator.git </span><br></pre></td></tr></table></figure>
+
+<p>然后修改ollvm源码，进入 ollvm目录，我的路径长下面这样，这里要注意一下路径才能找到自己的OrcRemoteTargetClient.h文件 ，在这一步忙了好久气死我了</p>
+<p>~&#x2F;obfuscator&#x2F;&#x2F;include&#x2F;llvm&#x2F;ExecutionEngine&#x2F;Orc&#x2F;OrcRemoteTargetClient.h</p>
+<p>定位到第690行 把char 改成 uint_8t</p>
+<p>在 obfuscator的同级目录下创造一个build目录</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">cd ~  # 确保回到用户根目录,因为我这边将其装在了根目录</span><br><span class="line">mkdir build  # 创建与obfuscator同级的build目录</span><br><span class="line">cd build</span><br><span class="line">cmake -DCMAKE_BUILD_TYPE=Release -DLLVM_INCLUDE_TESTS=OFF ../obfuscator/</span><br><span class="line">make -j$(nproc)  # 使用所有CPU核心加速编译</span><br><span class="line">sudo make install  </span><br></pre></td></tr></table></figure>
+
+<p>make install会将软件安装到当前用户的目录下</p>
+<p>sudo make install会将软件安装到系统的全局目录下，以便所有用户都可以使用。</p>
+<p>根据自己的要求选择</p>
+<p>好啦，至此我们的环境就配好了，接下来实践一下</p>
+<h2 id="ollvm混淆"><a href="#ollvm混淆" class="headerlink" title="ollvm混淆"></a>ollvm混淆</h2><p>在生成IR后、优化前插入混淆Pass</p>
+<p><strong>首先</strong>混淆有两种方法</p>
+<p>一种是配置ndk环境混淆，另一种是直接将clang作为程序进行混淆。</p>
+<p>这里我用的是第二种方法因为比较方便一点</p>
+<p>如果想看第一种的，学习的时候感觉这个文章写的很详细，先记一下怕以后会用到捏</p>
+<p><a target="_blank" rel="noopener" href="https://www.52pojie.cn/thread-1880845-1-1.html#49218035_%E6%90%AD%E5%BB%BAollvm%E7%8E%AF%E5%A2%83">OLLVM混淆环境搭建与去平坦化 - 吾爱破解 - 52pojie.cn</a></p>
+<p>在用clang的时候需要跳到build&#x2F;bin文件下面再操作</p>
+<p><strong>其次</strong>准备一个测试代码，注意选择那种有包含多个简单运算，可以展示混淆结果的。</p>
+<p>最好还能通过命令行参数控制不同的执行路径。</p>
+<p>我用的是这个</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line"></span><br><span class="line">int main(int argc, char *argv[]) &#123;</span><br><span class="line">    int d;</span><br><span class="line">    scanf(&quot;%d&quot;,&amp;d);</span><br><span class="line">    if(d==7)&#123;</span><br><span class="line">        printf(&quot;%d&quot;,d*5+d^5-7);</span><br><span class="line">    &#125;</span><br><span class="line">    else if(d==5)&#123;</span><br><span class="line">        printf(&quot;%d&quot;,d*7+d^7-5);</span><br><span class="line">    &#125;</span><br><span class="line">    else</span><br><span class="line">        printf(&quot;out&quot;);</span><br><span class="line">    return 0;</span><br><span class="line">&#125;      </span><br></pre></td></tr></table></figure>
+
+<p>首先没有混淆前用普通的gcc编译一下长这样，好亲切的程序啊</p>
+<p><img src="/../textimg/ollvm.assets/image-20250523171819526.png" alt="image-20250523171819526"></p>
+<p>再贴一下它的流程图，十分清晰哈</p>
+<p><img src="/../textimg/ollvm.assets/image-20250523164945901.png" alt="image-20250523164945901"></p>
+<h3 id="控制流扁平化"><a href="#控制流扁平化" class="headerlink" title="控制流扁平化"></a>控制流扁平化</h3><p>将程序原有的结构化控制流转换为平坦的状态机形式</p>
+<p>其实就是将真实块处理成while和switch结构，变得很丑</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./clang -mllvm -fla &#x27;/root/Desktop/main.c&#x27; -o fla1</span><br></pre></td></tr></table></figure>
+
+<p>混淆之后再打开变成了这样子</p>
+<p><img src="/../textimg/ollvm.assets/image-20250523172224054.png" alt="image-20250523172224054"></p>
+<p>但是仍然感觉没有之前写的题恶心，这是因为其实这个控制流下面还有其它编译器选项可以选</p>
+<ul>
+<li>-fla ：先扁平化控制流</li>
+<li>-split ：拆分基本块 基本块被拆成多个小块</li>
+<li>-split_num&#x3D;3：拆分次数  默认为1，这边是3，说明一个基本块被拆分了4次</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./clang -mllvm -fla -mllvm -split -mllvm -split_num=3 &#x27;/root/Desktop/main.c&#x27;  -o fla2</span><br></pre></td></tr></table></figure>
+
+<p>用完之后果然^-^恶心多了</p>
+<p><img src="/../textimg/ollvm.assets/image-20250523212752675.png" alt="image-20250523212752675"></p>
+<p>用D810解一下混淆两次也不一样，第一次解混淆的基本和原来的一模一样，第二次先贴个图，还是有好多没有用的东西，但其实大都是没用的赋值，而且动调也不太方便TvT好像得看汇编呢</p>
+<p><img src="/../textimg/ollvm.assets/image-20250523213344321.png" alt="image-20250523213344321"></p>
+<p>但是这里用angr解混淆的话就特别清爽，如下。哈哈看来还是要选择合适的解法捏</p>
+<p><img src="/../textimg/ollvm.assets/image-20250528221553011.png" alt="image-20250528221553011"></p>
+<h3 id="指令替换"><a href="#指令替换" class="headerlink" title="指令替换"></a>指令替换</h3><p>将简单的指令或操作替换为功能相同但更复杂的等效指令序列</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./clang -mllvm -sub &#x27;/root/Desktop/T v T/main.c&#x27;  -o sub1</span><br></pre></td></tr></table></figure>
+
+<p>其实看反汇编的地方看不出什么明堂几乎没有变，在流程图里就能清晰的看到啦</p>
+<p>主要是做了一些加减异或上的东西</p>
+<p><img src="/../textimg/ollvm.assets/image-20250528222114390.png" alt="image-20250528222114390"></p>
+<h3 id="虚假控制流程"><a href="#虚假控制流程" class="headerlink" title="虚假控制流程"></a>虚假控制流程</h3><p>在代码中插入永远不会执行的条件分支和代码块，也就是垃圾代码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./clang -mllvm -bcf &#x27;/root/Desktop/T v T/main.c&#x27;  -o buf1</span><br></pre></td></tr></table></figure>
+
+<p>混淆过后果然和源代码之间有点差别，中间很多没有用的</p>
+<p>但是用D810去掉之后与原来代码一样</p>
+<p><img src="/../textimg/ollvm.assets/image-20250529213144827.png" alt="image-20250529213144827"></p>
+<h2 id="ollvm去混淆的方法"><a href="#ollvm去混淆的方法" class="headerlink" title="ollvm去混淆的方法"></a>ollvm去混淆的方法</h2><p>关于<strong>控制流扁平化</strong>的话：</p>
+<p>1.ida里有D810的插件</p>
+<p>2.基于angr的脚本deflat.py去除</p>
+<p>主要看情况吧想脚本的话有的时候很多重要的函数都被混淆了，一个个找地址很麻烦的，不如用d810，但是呢如果有些地方被魔改了，还是要用脚本修改修改来解混淆。</p>
+<p><strong>虚假控制流</strong></p>
+<p>D810中内置了很多的不透明谓词表达式，它的匹配器也是非常的厉害完全可以做到去除虚假控制流</p>
+<p>在D810打开之后，选择default_unflattening_switch_case.json，之后点击start , 即可做到对不透明谓词的去除并还原控制流。</p>
+<p>如果发现有一些恒定值的不透明谓词表达式 D810 没有识别到无法去除的话，我们也可以手动添加规则让 D810 进行匹配来消除啊哈哈</p>
+<p><strong>指令替换</strong></p>
+<p>直接D810跑，神器</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>其实这里可以学的东西还有很多，包括试着修改一下它的原本pass来混淆（等我变强了再来挑战），还有分析函数块来去混淆，自己还有很多地方不足，等自己努力学懂了再整理一下思路吧。</p>
+<p>主要还是自己第一次了解到IR这种东西，而且后面还碰到好多稀奇古怪的文件，这让我明白了其实后面还有很多东西。</p>
+<p>“</p>
+<p>re题型的输入可能是什么</p>
+<p>答：从源文件到二进制文件编译过程中所有可能的文件，如源文件.c、任何形式的ir、汇编.s、目标文件.obj、可执行文件elf等等。</p>
+<p>”</p>
+<p>(⊙o⊙)…</p>
+<p>这是我在一篇文章里看到的很有想法的话</p>
+<p>希望自己后面的小朋友学习能抱着充实自己的形态不断学下去O(∩_∩)O~~</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">爱学习居士</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/posts/177574ba/">http://example.com/posts/177574ba/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://example.com" target="_blank">爱学习居士</a>！</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/image/avatar.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/posts/4a17b156/" title="Hello World"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">Hello World</div></div><div class="info-2"><div class="info-item-1">Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick StartCreate a new post1$ hexo new &quot;My New Post&quot;  More info: Writing Run server1$ hexo server  More info: Server Generate static files1$ hexo generate  More info: Generating Deploy to remote sites1$ hexo deploy  More info: Deployment </div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/image/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">爱学习居士</div><div class="author-info-description">失之东隅 收之桑榆</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">2</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">1</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#ollvm%E4%B8%8Ellvm"><span class="toc-text">ollvm与llvm</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#IR"><span class="toc-text">IR</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#pass"><span class="toc-text">pass</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#clang"><span class="toc-text">clang</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE"><span class="toc-text">环境配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ollvm%E6%B7%B7%E6%B7%86"><span class="toc-text">ollvm混淆</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%A7%E5%88%B6%E6%B5%81%E6%89%81%E5%B9%B3%E5%8C%96"><span class="toc-text">控制流扁平化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8C%87%E4%BB%A4%E6%9B%BF%E6%8D%A2"><span class="toc-text">指令替换</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%99%9A%E5%81%87%E6%8E%A7%E5%88%B6%E6%B5%81%E7%A8%8B"><span class="toc-text">虚假控制流程</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ollvm%E5%8E%BB%E6%B7%B7%E6%B7%86%E7%9A%84%E6%96%B9%E6%B3%95"><span class="toc-text">ollvm去混淆的方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/177574ba/" title="ollvm">ollvm</a><time datetime="2025-05-29T15:46:43.000Z" title="发表于 2025-05-29 23:46:43">2025-05-29</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/4a17b156/" title="Hello World">Hello World</a><time datetime="2025-05-08T12:45:49.984Z" title="发表于 2025-05-08 20:45:49">2025-05-08</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;2025 By 爱学习居士</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.4.0-b1</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><script async src="/js/title.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
