@@ -1,0 +1,401 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>被cython逆向肘击 | 爱学习居士</title><meta name="author" content="爱学习居士"><meta name="copyright" content="爱学习居士"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="最近新做了一种题型，感觉以后考的应该挺多的，然后干脆放一起总结一下吧，因为也算是re入门的一部分Y(^o^)Y python解包首先拿到一个exe文件它的外形长这样，基本就是用pyinsatller打包的exe文件  用工具查一下有pyinsatller显示出来  python逆向基础流程（纯小白教程）_python exe逆向-CSDN博客 解法也很简单下一个pyinstxtractor，放一">
+<meta property="og:type" content="article">
+<meta property="og:title" content="被cython逆向肘击">
+<meta property="og:url" content="http://example.com/posts/a9fb130b/index.html">
+<meta property="og:site_name" content="爱学习居士">
+<meta property="og:description" content="最近新做了一种题型，感觉以后考的应该挺多的，然后干脆放一起总结一下吧，因为也算是re入门的一部分Y(^o^)Y python解包首先拿到一个exe文件它的外形长这样，基本就是用pyinsatller打包的exe文件  用工具查一下有pyinsatller显示出来  python逆向基础流程（纯小白教程）_python exe逆向-CSDN博客 解法也很简单下一个pyinstxtractor，放一">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/image/10.png">
+<meta property="article:published_time" content="2025-07-15T11:58:56.000Z">
+<meta property="article:modified_time" content="2025-07-15T15:06:13.693Z">
+<meta property="article:author" content="爱学习居士">
+<meta property="article:tag" content="python逆向">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/image/10.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "被cython逆向肘击",
+  "url": "http://example.com/posts/a9fb130b/",
+  "image": "http://example.com/image/10.png",
+  "datePublished": "2025-07-15T11:58:56.000Z",
+  "dateModified": "2025-07-15T15:06:13.693Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "爱学习居士",
+      "url": "http://example.com/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favixon.jpg"><link rel="canonical" href="http://example.com/posts/a9fb130b/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '被cython逆向肘击',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/custom_cursor.css"><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-image: url(/image/photo.png);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/image/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">4</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">3</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/shuoshuo/"><i class="fa-fw far fa-comments"></i><span> 叽里呱啦</span></a></li><li><a class="site-page child" href="/music/"><i class="fa-fw fa fa-music"></i><span> 音乐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/image/10.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/avatar.jpg" alt="Logo"><span class="site-name">爱学习居士</span></a><a class="nav-page-title" href="/"><span class="site-name">被cython逆向肘击</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/shuoshuo/"><i class="fa-fw far fa-comments"></i><span> 叽里呱啦</span></a></li><li><a class="site-page child" href="/music/"><i class="fa-fw fa fa-music"></i><span> 音乐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">被cython逆向肘击</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-07-15T11:58:56.000Z" title="发表于 2025-07-15 19:58:56">2025-07-15</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-07-15T15:06:13.693Z" title="更新于 2025-07-15 23:06:13">2025-07-15</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E4%BB%8E0%E5%BC%80%E5%A7%8B%E7%9A%84re%E4%B8%96%E7%95%8C/">从0开始的re世界</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p> 最近新做了一种题型，感觉以后考的应该挺多的，然后干脆放一起总结一下吧，因为也算是re入门的一部分Y(^o^)Y</p>
+<h1 id="python解包"><a href="#python解包" class="headerlink" title="python解包"></a>python解包</h1><p>首先拿到一个exe文件它的外形长这样，基本就是用pyinsatller打包的exe文件</p>
+<p><img src="/../textimg/cython.assets/image-20250715202800192.png" alt="image-20250715202704937"></p>
+<p>用工具查一下有pyinsatller显示出来</p>
+<p><img src="/../textimg/cython.assets/image-20250715202704937.png" alt="image-20250715202704937"></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/liKeQing1027520/article/details/138168380">python逆向基础流程（纯小白教程）_python exe逆向-CSDN博客</a></p>
+<p>解法也很简单下一个pyinstxtractor，放一个文件夹下解包就可以了，这个是正统的方法</p>
+<p>像我这种不正经的人就会想歪门邪道用在线的，但是孩子们不要学歪哈(<em>^_^</em>)</p>
+<p>解开之后拿到pyc文件，然后用一个库拿到py文件，当然也有快速的方法，但是太求速度也不好，尽量知道正常的怎么做</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uncompyle6 文件名.pyc&gt;文件名.py.(要在pyc文件所在目录)</span><br></pre></td></tr></table></figure>
+
+<p>但是如果python版本太高的话就只能转换成字节码了，什么你不知道什么是python字节码！！！</p>
+<p>那快去学一下把ヽ(✿ﾟ▽ﾟ)ノ</p>
+<h1 id="pyc-encrypted"><a href="#pyc-encrypted" class="headerlink" title="pyc.encrypted"></a>pyc.encrypted</h1><p>这一类也挺简单的没什么难度，只是在上面的基础上对要分析的pyc进行了加密，只要用加密脚本去掉加密正常分析就可以了</p>
+<h2 id="我爱看小品"><a href="#我爱看小品" class="headerlink" title="我爱看小品"></a>我爱看小品</h2><p>下载附件是一个elf文件，我们把它放到kili里运行，遇到了像下面的报错</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">┌──(root㉿kali)-[~]</span><br><span class="line">└─# &#x27;/root/桌面/something&#x27; </span><br><span class="line">[223774] Failed to extract ld-linux-x86-64.so.2: decompression resulted in return code 0！</span><br></pre></td></tr></table></figure>
+
+
+
+<p>ai一下发现是打包过的文件</p>
+<p><img src="/../textimg/cython.assets/image-20250502144629265.png" alt="image-20250502144629265"></p>
+<p>在kali上对文件进行解包</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 &#x27;/root/桌面/pyinstxtractor/pyinstxtractor-2025.02/pyinstxtractor.py&#x27; &#x27;/root/桌面/something&#x27; </span><br></pre></td></tr></table></figure>
+
+<p>运行之后发现有一个文件出现在当前的文件夹下，把它移到桌面上打开会发现something.pyc</p>
+<p><img src="/../textimg/cython.assets/image-20250502145430406.png" alt="image-20250502145430406"></p>
+<p>用这个网站<a target="_blank" rel="noopener" href="https://www.lddgo.net/string/pyc-compile-decompile">在线Python pyc文件编译与反编译</a></p>
+<p>对pyc反编译得到下面的一个主函数</p>
+<p>可以发现其它的函数都有定义，关键在于mypy文件里内容</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"># Visit https://www.lddgo.net/string/pyc-compile-decompile for more information</span><br><span class="line"># Version : Python 3.8</span><br><span class="line"></span><br><span class="line">import mypy</span><br><span class="line">import yourpy</span><br><span class="line"></span><br><span class="line">def something():</span><br><span class="line">    print(&#x27;  打工奇遇&#x27;)</span><br><span class="line">    print(&#x27;宫室长悬陇水声&#x27;)</span><br><span class="line">    print(&#x27;廷陵刻此侈宠光&#x27;)</span><br><span class="line">    print(&#x27;玉池生肥咽不彻&#x27;)</span><br><span class="line">    print(&#x27;液枯自断仙无分&#x27;)</span><br><span class="line">    print(&#x27;酒醒玉山来映人&#x27;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def check():</span><br><span class="line">    your_input = input()</span><br><span class="line">    if your_input[:5] == &#x27;ISCC&#123;&#x27; and your_input[-1] == &#x27;&#125;&#x27;:</span><br><span class="line">        print(&quot;Come along, you&#x27;ll find the answer!&quot;)</span><br><span class="line">    else:</span><br><span class="line">        print(&#x27;Flag is wrong!&#x27;)</span><br><span class="line"></span><br><span class="line">if __name__ == &#x27;__main__&#x27;:</span><br><span class="line">    mypy.myfun()</span><br><span class="line">    something()</span><br><span class="line">    print(&#x27;Please enter flag:&#x27;)</span><br><span class="line">    check()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>在文件夹内发现&#x2F;PYZ-00.pyz_extracted文件夹里有mypy.pyc但是被加密了有一个. encrypted的后缀，需要把它解出来，这里有一篇文章写着很详细做法</p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/liweis/p/15891170.html">在Python中反编译加密的pyc文件 - 我也是个傻瓜 - 博客园</a></p>
+<p>key在&#x2F;root&#x2F;桌面&#x2F;something_extracted&#x2F;的pyimod00_crypto_key文件中</p>
+<p><img src="/../textimg/cython.assets/image-20250502150323645.png" alt="image-20250502150323645"></p>
+<p>用脚本把文件解密，记得修改路径和key还有python的版本头文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">import glob</span><br><span class="line">import zlib</span><br><span class="line">import tinyaes</span><br><span class="line">from pathlib import Path</span><br><span class="line"> </span><br><span class="line">CRYPT_BLOCK_SIZE = 16</span><br><span class="line"> </span><br><span class="line"># key obtained from pyimod00_crypto_key</span><br><span class="line">key = bytes(&#x27;yibaibayibei1801&#x27;, &#x27;utf-8&#x27;)</span><br><span class="line"> </span><br><span class="line">for p in Path(&quot;/root/桌面/something_extracted/PYZ00.pyz_extracted&quot;).glob(&quot;**/*.pyc.encrypted&quot;):</span><br><span class="line">    inf = open(p, &#x27;rb&#x27;) # encrypted file input</span><br><span class="line">    outf = open(p.with_name(p.stem), &#x27;wb&#x27;) # output file</span><br><span class="line"> </span><br><span class="line">    # Initialization vector</span><br><span class="line">    iv = inf.read(CRYPT_BLOCK_SIZE)</span><br><span class="line"> </span><br><span class="line">    cipher = tinyaes.AES(key, iv)</span><br><span class="line"> </span><br><span class="line">    # Decrypt and decompress</span><br><span class="line">    plaintext = zlib.decompress(cipher.CTR_xcrypt_buffer(inf.read()))</span><br><span class="line"> </span><br><span class="line">    # Write pyc header</span><br><span class="line">    # The header below is for Python 3.8</span><br><span class="line">    outf.write(b&#x27;\x55\x0d\x0d\x0a\0\0\0\0\0\0\0\0\0\0\0\0&#x27;)</span><br><span class="line"> </span><br><span class="line">    # Write decrypted data</span><br><span class="line">    outf.write(plaintext)</span><br><span class="line"> </span><br><span class="line">    inf.close()</span><br><span class="line">    outf.close()</span><br><span class="line"> </span><br><span class="line">    # Delete .pyc.encrypted file</span><br><span class="line">    p.unlink()</span><br></pre></td></tr></table></figure>
+
+<p>这个时候再打开发现都变成了 pyc文件，反汇编一下</p>
+<p><img src="/../textimg/cython.assets/image-20250502150449107.png" alt="image-20250502150449107"></p>
+<p>myfun函数长这样，把flag里面的部分分成三段进行解密就可以了</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"># Visit https://www.lddgo.net/string/pyc-compile-decompile for more information</span><br><span class="line"># Version : Python 3.8</span><br><span class="line"></span><br><span class="line">import time</span><br><span class="line"></span><br><span class="line">def myfun():</span><br><span class="line">    part1 = &#x27;ISCC&#123;&#x27;</span><br><span class="line">    part2 = &#x27;xxxxxxxxxxxxxxxxxxxxxxxxxxxx&#x27;</span><br><span class="line">    part3 = &#x27;&#125;&#x27;</span><br><span class="line">    tmp = &#x27;&#x27;</span><br><span class="line">    part2_1 = part2[:11]</span><br><span class="line">    part2_2 = part2[11:15]</span><br><span class="line">    part2_3 = part2[15:20]</span><br><span class="line">    part2_4 = part2[20:]</span><br><span class="line">    for i in range(len(part2_1)):</span><br><span class="line">        tmp += chr(ord(part2_1[i]) + 1)</span><br><span class="line">    for i in range(len(part2_2)):</span><br><span class="line">        if part2_2[i].isalpha():</span><br><span class="line">            tmp += chr(ord(part2_2[i]) ^ 32)</span><br><span class="line">            continue</span><br><span class="line">        tmp += chr(ord(part2_2[i]) + 0)</span><br><span class="line">    for i in range(len(part2_3)):</span><br><span class="line">        tmp += chr(ord(part2_3[i]) - 1)</span><br><span class="line">    for i in range(len(part2_4)):</span><br><span class="line">        tmp += chr(ord(part2_4[i]) + i % 2)</span><br><span class="line">    cipher = &#x27;qzjotubmmfs_IS_udqx^iotfrfsuiog&#x27;</span><br><span class="line">    true_flag = part1 + part2 + part3</span><br><span class="line">    print(time.strftime(&#x27;%Y-%m-%d %H:%M&#x27;, time.localtime(time.time())))</span><br><span class="line">    return true_flag</span><br><span class="line"></span><br><span class="line">if __name__ == &#x27;__main__&#x27;:</span><br><span class="line">    ss = myfun()</span><br><span class="line">    print(ss)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>写一下脚本</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">def decrypt():</span><br><span class="line">    cipher = &#x27;qzjotubmmfs_IS_udqx^iotfrfsuiog&#x27;</span><br><span class="line"></span><br><span class="line">    # 第一段：每个字符 -1</span><br><span class="line">    part2_1 = &#x27;&#x27;.join([chr(ord(c) - 1) for c in cipher[0:11]])</span><br><span class="line"></span><br><span class="line">    # 第二段：如果是字母，就 ^32（大小写互换）</span><br><span class="line">    part2_2 = &#x27;&#x27;</span><br><span class="line">    for c in cipher[11:15]:</span><br><span class="line">        if c.isalpha():</span><br><span class="line">            part2_2 += chr(ord(c) ^ 32)</span><br><span class="line">        else:</span><br><span class="line">            part2_2 += c</span><br><span class="line"></span><br><span class="line">    # 第三段：每个字符 +1</span><br><span class="line">    part2_3 = &#x27;&#x27;.join([chr(ord(c) + 1) for c in cipher[15:20]])</span><br><span class="line"></span><br><span class="line">    # 第四段：每个字符 - (i % 2)</span><br><span class="line">    part2_4 = &#x27;&#x27;.join([</span><br><span class="line">        chr(ord(c) - (i % 2)) for i, c in enumerate(cipher[20:])</span><br><span class="line">    ])</span><br><span class="line"></span><br><span class="line">    part2 = part2_1 + part2_2 + part2_3 + part2_4</span><br><span class="line">    return &#x27;ISCC&#123;&#x27; + part2 + &#x27;&#125;&#x27;</span><br><span class="line"></span><br><span class="line">print(decrypt())</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<h1 id="Cython逆向"><a href="#Cython逆向" class="headerlink" title="Cython逆向"></a>Cython逆向</h1><p>pyd文件相当于dll文件，也就是动态链接库的概念，它不能像pyc一样直接打出字节码，只能反汇编</p>
+<p>如果可以的话试试自己写一个pyd，可以发现混淆挺严重的，逆向难度大大提升，我们只能使用朴素的方法直接ida</p>
+<p>做题步骤：①先打印观察引用的库，导出函数   </p>
+<p>​         ②看python版本</p>
+<p>​         ③ida打开，查看字符串，数据</p>
+<p>​         ④跳到实现函数，动调或者看库函数分析逻辑</p>
+<p>当然，还有用注入pyd的方法，看到里面的加密方法，</p>
+<p>感觉要是利用好注入和动调的话，这种题简直就是易如反掌</p>
+<p>但是主要是我现在知识浅薄还不会那么写脚本::&gt;_&lt;::</p>
+<p>还是要多加努力✊</p>
+<h2 id="moon"><a href="#moon" class="headerlink" title="moon"></a>moon</h2><p>拿到文件先看一下主函数，用了moon.pyd里面的check函数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">import moon </span><br><span class="line"></span><br><span class="line">print(&quot;I tried my best, to live an ordinary life.&quot;)</span><br><span class="line">print(&quot;But I hope you can look up and see the moonlight through reverse engineering on the streets full of sixpence.&quot;)</span><br><span class="line"></span><br><span class="line">user_input = input(&quot;Enter your flag: &quot;).strip()</span><br><span class="line"></span><br><span class="line">result, error = moon.check_flag(user_input)</span><br><span class="line"></span><br><span class="line">if error:</span><br><span class="line">    print(&quot;Error.&quot;)</span><br><span class="line">elif result:</span><br><span class="line">    print(&quot;I think you have found the right way.&quot;)</span><br><span class="line">else:</span><br><span class="line">    print(&quot;You seem to be lost.&quot;)</span><br></pre></td></tr></table></figure>
+
+<p>因为pyd类似于dll，无法像pyc一样拿到源码所以我们用ida来逆向一下逻辑，为了看清里面的逻辑我们先借助python中的函数查看一下pyd里面的内容</p>
+<p><img src="/../textimg/cython.assets/image-20250709103729126.png" alt="image-20250709103729126"></p>
+<p>里面有两个函数一个是check一个是xor，大概能猜到是先经过异或然后检验一下flag是否正确。</p>
+<p>用ida打开，试了一下发现用两种方法可以找到具体的实现函数。</p>
+<p><img src="/../textimg/cython.assets/image-20250709105857244.png" alt="image-20250709105857244"></p>
+<blockquote>
+<p>①如果你是用1这个地方引用的话，直接引用到data字段，字符串下面是另一个<strong>函数指针</strong>，指向实际实现<code>check_flag</code>功能的函数，然后点进去一般return的第一个函数就是你要的功能函数</p>
+</blockquote>
+<p><img src="/../textimg/cython.assets/image-20250709105524059.png" alt="image-20250709105524059"></p>
+<p>②如果是用2这个地方引用的话，第一行引用是这个函数的包装函数，第二行才是这函数的<code>内部实现</code>，但也有可能会有超过两行的情况，看一下偏移其实大差不差，点进去的函数，就是我们要分析的函数内部</p>
+<p><img src="/../textimg/cython.assets/image-20250709110442752.png" alt="image-20250709110442752"></p>
+<p>ok，首先让我们先找到 <code>模块状态 </code>来分析一下里面都有什么，就是这个东西，可以看出里面有seed和一个16进制的字符串，还有random，和我们利用python打印出的模块也差不多可能是random.seed去生成随机数。</p>
+<p>这个off_18000B618就是模块全局字典，没太看懂里面是什么意思</p>
+<p><img src="/../textimg/cython.assets/image-20250709162510424.png" alt="image-20250709162510424"></p>
+<p>我们再去找一下我们打印出的check和xor函数</p>
+<p>找到函数之后我们就可以开始分析了，很多东西都可以从红色的一些库函数来了解程序的走向，在check函数中我们可以看到比较的函数，剩下的就是获取对象之类的函数，因为是对比函数，所以只要我们输入的和python对象加载的flag一样就好了，所以我们跑到xor函数大概就知道要我们输入的是什么了</p>
+<p><img src="/../textimg/cython.assets/image-20250709155528161.png" alt="image-20250709155528161"></p>
+<p><img src="/../textimg/cython.assets/image-20250709160057232.png" alt="image-20250709160057232"></p>
+<p>xor函数里面发现一个异或函数，找到这里发现他是异或完加到一个列表后面，这个v8在后面找一下会发现是在PyDict_GetItem_KnownHash这个函数这边对模块全局字典引用可以发现是一个种子</p>
+<p><img src="/../textimg/cython.assets/image-20250709221003115.png" alt="image-20250709221003115"></p>
+<p>这个种子就是刚刚用函数打印出来的1131796,大致就是用这个种子生成了随机数，然后16进制密文去异或随机数得到flag</p>
+<p><img src="/../textimg/cython.assets/image-20250709221703493.png" alt="image-20250709221703493"></p>
+<h3 id="静态"><a href="#静态" class="headerlink" title="静态"></a>静态</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">import random</span><br><span class="line"></span><br><span class="line">random.seed(1131796)</span><br><span class="line">en = &quot;426b87abd0ceaa3c58761bbb0172606dd8ab064491a2a76af9a93e1ae56fa84206a2f7&quot;</span><br><span class="line">enbt = bytes.fromhex(en)</span><br><span class="line"></span><br><span class="line">key = []</span><br><span class="line">for i in range(len(enbt)):</span><br><span class="line">    key.append(random.randint(0, 255))</span><br><span class="line"></span><br><span class="line">flag_bytes = []</span><br><span class="line">for i in range(len(enbt)):</span><br><span class="line">    flag_bytes.append(enbt[i] ^ key[i])</span><br><span class="line"></span><br><span class="line">flag = bytes(flag_bytes).decode()</span><br><span class="line">print(flag)</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="动态"><a href="#动态" class="headerlink" title="动态"></a>动态</h3><p>在PyObject_RichCompare和PyNumber_Xor上下断点，然后附加在python3.11exe上动调，这里我的输入是好多a，试了一下发现这里异或的数值都是不变的，然后直接f9到PyObject_RichCompare</p>
+<p>回到PyNumber_Xor把异或后得到的数据提出来，然后异或回去得到随机数</p>
+<p><img src="/../textimg/cython.assets/image-20250710104041533.png" alt="image-20250710104041533"></p>
+<p><img src="/../textimg/cython.assets/image-20250710105351690.png" alt="image-20250710105351690"></p>
+<p>最后得到flag</p>
+<h2 id="rand0m"><a href="#rand0m" class="headerlink" title="rand0m"></a>rand0m</h2><p>首先拿到一个pyd</p>
+<p>先用help和dir查看模块内的函数和类的用法</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">import rand0m</span><br><span class="line"></span><br><span class="line">print(dir(rand0m))</span><br><span class="line">print(help(rand0m))</span><br></pre></td></tr></table></figure>
+
+<p><img src="/../textimg/cython.assets/image-20250708172451421.png" alt="image-20250708172451421"></p>
+<p>大致了解一下里面有rand0m和check函数</p>
+<p>用ida打开分析一下，首先先看字符串，找到函数对应的字符串，找到函数实现部分</p>
+<p><img src="/../textimg/cython.assets/image-20250708172802264.png" alt="image-20250708172802264"></p>
+<p>然后结合动调对函数里面进行分析</p>
+<p><img src="/../textimg/cython.assets/image-20250714210114986.png" alt="image-20250714210114986"></p>
+<p>然后可以知道rand0m里面的进行了什么操作</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">def rand0m(x):</span><br><span class="line">    a = ((x^2654435769)&gt;&gt;11)**65537%4294967293</span><br><span class="line">    b = ((x&lt;&lt;4)&amp;4198170623)+((x&gt;&gt;5)&gt;&gt;23)</span><br><span class="line">    return a, b</span><br></pre></td></tr></table></figure>
+
+<p>再对check函数进行动调可以发现，在4660函数部分进行了跳转，也就是先初始化了数组，然后进行rand0m里面的操作</p>
+<p><img src="/../textimg/cython.assets/image-20250715180135630.png" alt="image-20250715180135630"></p>
+<p><img src="/../textimg/cython.assets/image-20250715180807680.png" alt="image-20250715180807680"></p>
+<p>到这里就差不多了</p>
+<p><strong>逆向与操作的通用方法</strong></p>
+<h3 id=""><a href="#" class="headerlink" title=""></a></h3><p>如果已知 <code>A &amp; B = C</code>，并且知道 <code>A</code> 或 <code>B</code> 中的一个，可以部分恢复另一个：</p>
+<ul>
+<li>如果 <code>A</code> 的某位是 <code>0</code>，则 <code>B</code> 的该位 <strong>无法确定</strong>（因为 <code>0 &amp; B = 0</code>，无论 <code>B</code> 是 <code>0</code> 还是 <code>1</code>）。</li>
+<li>如果 <code>A</code> 的某位是 <code>1</code>，则 <code>B</code> 的该位 <strong>必须等于 <code>C</code> 的对应位</strong>（因为 <code>1 &amp; B = B</code>）。</li>
+</ul>
+<p>直接爆破一下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">&#x27;&#x27;&#x27;</span><br><span class="line">def rand0m(x):</span><br><span class="line">    a = ((x^2654435769)&gt;&gt;11)**65537%4294967293</span><br><span class="line">    b = ((x&lt;&lt;4)&amp;4198170623)+((x&gt;&gt;5)&gt;&gt;23)</span><br><span class="line">    return a, b</span><br><span class="line">&#x27;&#x27;&#x27;</span><br><span class="line"></span><br><span class="line">import gmpy2</span><br><span class="line">def fun(i, y, n):</span><br><span class="line">    if n == 0:</span><br><span class="line">        return y &amp; ~(1 &lt;&lt; i)</span><br><span class="line">    else:</span><br><span class="line">        return y | (1 &lt;&lt; i)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">list = [26, 24, 23, 22, 18, 16]</span><br><span class="line">en1 = [0x12287F38, 0x4a30f74d, 0x23a1268, 0x88108807]</span><br><span class="line">en2 = [0x98d24b3a, 0xe0f1db77, 0xadf38403, 0xd8499bb6]</span><br><span class="line">flag = []</span><br><span class="line">for i in range(len(en1)):</span><br><span class="line">    x = en1[i]</span><br><span class="line">    c = x &amp; 0xf</span><br><span class="line">    b = x - c</span><br><span class="line"></span><br><span class="line">    for one in range(2):</span><br><span class="line">        b = fun(list[0], b, one)</span><br><span class="line">        for two in range(2):</span><br><span class="line">            b = fun(list[1], b, two)</span><br><span class="line">            for three in range(2):</span><br><span class="line">                b = fun(list[2], b, three)</span><br><span class="line">                for four in range(2):</span><br><span class="line">                    b = fun(list[3], b, four)</span><br><span class="line">                    for five in range(2):</span><br><span class="line">                        b = fun(list[4], b, five)</span><br><span class="line">                        for six in range(2):</span><br><span class="line">                            b = fun(list[5], b, six)</span><br><span class="line">                            part = ((x &lt;&lt; 28) | (b &gt;&gt; 4)) &amp; 0xffffffff</span><br><span class="line"></span><br><span class="line">                            p1 = (part ^ 0x9e3779b9) &gt;&gt; 0xb</span><br><span class="line">                            res = gmpy2.powmod(p1, 0x10001, 0xfffffffd)</span><br><span class="line">                            if res == en2[i]:</span><br><span class="line">                                flag.append(part)</span><br><span class="line">for i in flag:</span><br><span class="line">    t = hex(i)[2:]</span><br><span class="line">    print(t)</span><br></pre></td></tr></table></figure>
+
+<p>在别的地方看到了一个十分有意思的做法，用hook注入来看数据加密的过程</p>
+<p><a target="_blank" rel="noopener" href="https://xz.aliyun.com/news/16203">第十八届信息安全大赛 &amp;&amp; 第二届长城杯 - re-先知社区</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">class Symbol:</span><br><span class="line">    def __init__(self, name):</span><br><span class="line">        self.name = name</span><br><span class="line"></span><br><span class="line">    def __eq__(self, other):</span><br><span class="line">        print(f&quot;Comparing &#123;self.name&#125; and &#123;other:08x&#125;&quot;)</span><br><span class="line">        if isinstance(other, Symbol):</span><br><span class="line">            return self.name == other.name</span><br><span class="line">        return self.name == other</span><br><span class="line"></span><br><span class="line">import rand0m</span><br><span class="line">tempcheck = rand0m.check</span><br><span class="line">temprand0m = rand0m.rand0m</span><br><span class="line"></span><br><span class="line">def mycheck(flag):</span><br><span class="line">    print(&quot;Checking flag: &quot;, flag, end=&quot; -&gt;\n&quot;)</span><br><span class="line">    result = tempcheck(flag)</span><br><span class="line">    print(&quot;Result: &quot;, result)</span><br><span class="line">    return result</span><br><span class="line"></span><br><span class="line">def myrand0m(x):</span><br><span class="line">    print(&quot;\tRandom: &quot;, x, end=&quot; -&gt; &quot;)</span><br><span class="line">    result = temprand0m(x)</span><br><span class="line">    print(f&quot;\tResult: (&#123;result[0]:08x&#125;, &#123;result[1]:08x&#125;)&quot;)</span><br><span class="line">    result = (Symbol(f&quot;&#123;result[0]:x&#125;&quot;), Symbol(f&quot;&#123;result[1]:x&#125;&quot;))</span><br><span class="line">    return result</span><br><span class="line"></span><br><span class="line">rand0m.check = mycheck</span><br><span class="line">rand0m.rand0m = myrand0m</span><br><span class="line">flag = &quot;1234567890abcdef1234567890abcdef&quot;</span><br><span class="line">print(rand0m.check(flag))</span><br></pre></td></tr></table></figure>
+
+<p>ヽ(✿ﾟ▽ﾟ)ノ</p>
+<h2 id="ez-cython"><a href="#ez-cython" class="headerlink" title="ez-cython"></a>ez-cython</h2><p>首先解包，可以看到主代码</p>
+<p><img src="/../textimg/cython.assets/image-20250714105910944.png" alt="image-20250714105910944"></p>
+<p>关键是运用了pyd里面的一个函数，先查看一下pyd里面有哪些类</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">import cy</span><br><span class="line"></span><br><span class="line">print(dir(cy))</span><br><span class="line">print(help(cy))</span><br></pre></td></tr></table></figure>
+
+<p>从输出可以看到有一个自定义类**<code>QOOQOOQOOQOOOQ</code>**，大概可以猜到是用来生成key的，然后有三个函数，一个用来检查flag的，另外两个用于加密</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">[&#x27;QOOQOOQOOQOOOQ&#x27;, &#x27;__builtins__&#x27;, &#x27;__doc__&#x27;, &#x27;__file__&#x27;, &#x27;__loader__&#x27;, &#x27;__name__&#x27;, &#x27;__package__&#x27;, &#x27;__spec__&#x27;, &#x27;__test__&#x27;, &#x27;sub14514&#x27;, &#x27;sub50520&#x27;, &#x27;sub50804&#x27;]</span><br><span class="line">Help on module cy:</span><br><span class="line"></span><br><span class="line">NAME</span><br><span class="line">    cy</span><br><span class="line"></span><br><span class="line">CLASSES</span><br><span class="line">    builtins.object</span><br><span class="line">        QOOQOOQOOQOOOQ</span><br><span class="line">    </span><br><span class="line">    class QOOQOOQOOQOOOQ(builtins.object)</span><br><span class="line">     |  Methods defined here:</span><br><span class="line">     |  </span><br><span class="line">     |  __init__(self)</span><br><span class="line">     |  </span><br><span class="line">     |  get_key(self)</span><br><span class="line">     |  </span><br><span class="line">     |  ----------------------------------------------------------------------</span><br><span class="line">     |  Data descriptors defined here:</span><br><span class="line">     |  </span><br><span class="line">     |  __dict__</span><br><span class="line">     |      dictionary for instance variables (if defined)</span><br><span class="line">     |  </span><br><span class="line">     |  __weakref__</span><br><span class="line">     |      list of weak references to the object (if defined)</span><br><span class="line"></span><br><span class="line">FUNCTIONS</span><br><span class="line">    sub14514(nmnmnnnmnmmnmmnn)</span><br><span class="line">    </span><br><span class="line">    sub50520(T7T77T77T7T7TT, key)</span><br><span class="line">    </span><br><span class="line">    sub50804(a, b, c, d, e, f)</span><br><span class="line"></span><br><span class="line">DATA</span><br><span class="line">    __test__ = &#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>打开pyd文件先找到了14514函数，分析一下看到了PyObject_RichCompare对比函数</p>
+<p>对50804函数进行分析可以看到都是异或和位移弄在一起，</p>
+<p>对50520函数进行分析可以看到都是与运算。</p>
+<p>反正就这么一步步看</p>
+<p><img src="/../textimg/cython.assets/image-20250715175027932.png" alt="image-20250715175027932"></p>
+<p>所以可以得到50804函数里面的东西是这个</p>
+<p>其实按这个步骤再分析50520函数就行，但是我实在脑子要炸掉了</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">def shift(a, b, c, d, e, f):</span><br><span class="line">    return ((((a &gt;&gt; 3) ^ (b &lt;&lt; 3)) + ((b &gt;&gt; 4) ^ (a &lt;&lt; 2))) ^ ((b ^ c) + (d[(e &amp; 2) ^ f] ^ a)))</span><br></pre></td></tr></table></figure>
+
+<p>这次直接采用直接注入的方式试一试，运行之后可以发现里面的加密过程，直接逆</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line">import cy</span><br><span class="line"></span><br><span class="line">class Symbol:</span><br><span class="line">    def __init__(self, name):</span><br><span class="line">        self.name = name</span><br><span class="line"></span><br><span class="line">    def __repr__(self):</span><br><span class="line">        return self.name</span><br><span class="line"></span><br><span class="line">    def __rshift__(self, other):</span><br><span class="line">        if isinstance(other, Symbol):</span><br><span class="line">            expression = Symbol(f&quot;(&#123;self.name&#125; &gt;&gt; &#123;other.name&#125;)&quot;)</span><br><span class="line">        else:</span><br><span class="line">            expression = Symbol(f&quot;(&#123;self.name&#125; &gt;&gt; &#123;other&#125;)&quot;)</span><br><span class="line">        return expression</span><br><span class="line"></span><br><span class="line">    def __lshift__(self, other):</span><br><span class="line">        if isinstance(other, Symbol):</span><br><span class="line">            expression = Symbol(f&quot;(&#123;self.name&#125; &lt;&lt; &#123;other.name&#125;)&quot;)</span><br><span class="line">        else:</span><br><span class="line">            expression = Symbol(f&quot;(&#123;self.name&#125; &lt;&lt; &#123;other&#125;)&quot;)</span><br><span class="line">        return expression</span><br><span class="line"></span><br><span class="line">    def __rxor__(self, other):</span><br><span class="line">        if isinstance(other, Symbol):</span><br><span class="line">            expression = Symbol(f&quot;(&#123;self.name&#125; ^ &#123;other.name&#125;)&quot;)</span><br><span class="line">        else:</span><br><span class="line">            expression = Symbol(f&quot;(&#123;self.name&#125; ^ &#123;other&#125;)&quot;)</span><br><span class="line">        return expression</span><br><span class="line"></span><br><span class="line">    def __xor__(self, other):</span><br><span class="line">        if isinstance(other, Symbol):</span><br><span class="line">            expression = Symbol(f&quot;(&#123;self.name&#125; ^ &#123;other.name&#125;)&quot;)</span><br><span class="line">        else:</span><br><span class="line">            expression = Symbol(f&quot;(&#123;self.name&#125; ^ &#123;other&#125;)&quot;)</span><br><span class="line">        return expression</span><br><span class="line"></span><br><span class="line">    def __add__(self, other):</span><br><span class="line">        if isinstance(other, Symbol):</span><br><span class="line">            expression = Symbol(f&quot;(&#123;self.name&#125; + &#123;other.name&#125;)&quot;)</span><br><span class="line">        else:</span><br><span class="line">            expression = Symbol(f&quot;(&#123;self.name&#125; + &#123;other&#125;)&quot;)</span><br><span class="line">        return expression</span><br><span class="line"></span><br><span class="line">    def __and__(self, other):</span><br><span class="line">        if isinstance(other, Symbol):</span><br><span class="line">            expression = Symbol(f&quot;(&#123;self.name&#125; &amp; &#123;other.name&#125;)&quot;)</span><br><span class="line">        else:</span><br><span class="line">            expression = Symbol(f&quot;(&#123;self.name&#125; &amp; &#123;other&#125;)&quot;)</span><br><span class="line">        return expression</span><br><span class="line"></span><br><span class="line">class AList:</span><br><span class="line">    def __init__(self, nums):</span><br><span class="line">        self.nums = [Symbol(str(num)) for num in nums]</span><br><span class="line"></span><br><span class="line">    def __getitem__(self, key):</span><br><span class="line">        return self.nums[key]</span><br><span class="line"></span><br><span class="line">    def copy(self):</span><br><span class="line">        return AList(self.nums)</span><br><span class="line"></span><br><span class="line">    def __len__(self):</span><br><span class="line">        return len(self.nums)</span><br><span class="line"></span><br><span class="line">    def __setitem__(self, key, value):</span><br><span class="line">        print(f&quot;new_&#123;self.nums[key]&#125; = &#123;value&#125;&quot;)</span><br><span class="line">        self.nums[key] = Symbol(f&quot;new_&#123;self.nums[key].name&#125;&quot;)</span><br><span class="line"></span><br><span class="line">    def __eq__(self, other):</span><br><span class="line">        print(f&quot;&#123;self.nums&#125; == &#123;other&#125;&quot;)</span><br><span class="line">        return self.nums == other</span><br><span class="line"></span><br><span class="line">inp = AList([f&quot;a[&#123;1&#125;]&quot; for i in range(32)])</span><br><span class="line">res = cy.sub14514(inp)</span><br><span class="line"></span><br><span class="line">if __name__ == &#x27;__main__&#x27;:</span><br><span class="line">    print(res)</span><br></pre></td></tr></table></figure>
+
+
+
+<p>中间其实还有很多的，我简略一些</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">new_a[1] = ((a[1] + ((((a[1] &gt;&gt; 3) ^ (a[1] &lt;&lt; 3)) + ((a[1] &gt;&gt; 4) ^ (a[1] &lt;&lt; 2))) ^ ((a[1] ^ 2654435769) + (a[1] ^ 49)))) &amp; 4294967295)</span><br><span class="line">new_a[1] = ((a[1] + ((((new_a[1] &gt;&gt; 3) ^ (a[1] &lt;&lt; 3)) + ((a[1] &gt;&gt; 4) ^ (new_a[1] &lt;&lt; 2))) ^ ((a[1] ^ 2654435769) + (new_a[1] ^ 49)))) &amp; 4294967295)</span><br><span class="line">new_a[1] = ((a[1] + ((((new_a[1] &gt;&gt; 3) ^ (a[1] &lt;&lt; 3)) + ((a[1] &gt;&gt; 4) ^ (new_a[1] &lt;&lt; 2))) ^ ((a[1] ^ 2654435769) + (new_a[1] ^ 121)))) &amp; 4294967295)</span><br><span class="line">new_a[1] = ((a[1] + ((((new_a[1] &gt;&gt; 3) ^ (a[1] &lt;&lt; 3)) + ((a[1] &gt;&gt; 4) ^ (new_a[1] &lt;&lt; 2))) ^ ((a[1] ^ 2654435769) + (new_a[1] ^ 121)))) &amp; 4294967295)</span><br><span class="line">new_a[1] = ((a[1] + ((((new_a[1] &gt;&gt; 3) ^ (a[1] &lt;&lt; 3)) + ((a[1] &gt;&gt; 4) ^ (new_a[1] &lt;&lt; 2))) ^ ((a[1] ^ 2654435769) + (new_a[1] ^ 49)))) &amp; 4294967295)</span><br><span class="line">。。。。。。。</span><br><span class="line">new_new_new_new_new_a[1] = ((new_new_new_new_a[1] + ((((new_new_new_new_new_a[1] &gt;&gt; 3) ^ (new_new_new_new_a[1] &lt;&lt; 3)) + ((new_new_new_new_a[1] &gt;&gt; 4) ^ (new_new_new_new_new_a[1] &lt;&lt; 2))) ^ ((new_new_new_new_a[1] ^ 387276957) + (new_new_new_new_new_a[1] ^ 121)))) &amp; 4294967295)</span><br><span class="line">new_new_new_new_new_a[1] = ((new_new_new_new_a[1] + ((((new_new_new_new_new_a[1] &gt;&gt; 3) ^ (new_new_new_new_new_a[1] &lt;&lt; 3)) + ((new_new_new_new_new_a[1] &gt;&gt; 4) ^ (new_new_new_new_new_a[1] &lt;&lt; 2))) ^ ((new_new_new_new_new_a[1] ^ 387276957) + (new_new_new_new_new_a[1] ^ 121)))) &amp; 4294967295)</span><br><span class="line">[new_new_new_new_new_a[1], new_new_new_new_new_a[1], new_new_new_new_new_a[1], new_new_new_new_new_a[1], new_new_new_new_new_a[1], new_new_new_new_new_a[1], new_new_new_new_new_a[1], new_new_new_new_new_a[1], new_new_new_new_new_a[1], new_new_new_new_new_a[1], new_new_new_new_new_a[1], new_new_new_new_new_a[1], new_new_new_new_new_a[1], new_new_new_new_new_a[1], new_new_new_new_new_a[1], new_new_new_new_new_a[1], new_new_new_new_new_a[1], new_new_new_new_new_a[1], new_new_new_new_new_a[1], new_new_new_new_new_a[1], new_new_new_new_new_a[1], new_new_new_new_new_a[1], new_new_new_new_new_a[1], new_new_new_new_new_a[1], new_new_new_new_new_a[1], new_new_new_new_new_a[1], new_new_new_new_new_a[1], new_new_new_new_new_a[1], new_new_new_new_new_a[1], new_new_new_new_new_a[1], new_new_new_new_new_a[1], new_new_new_new_new_a[1]] == [4108944556, 3404732701, 1466956825, 788072761, 1482427973, 782926647, 1635740553, 4115935911, 2820454423, 3206473923, 1700989382, 2460803532, 2399057278, 968884411, 1298467094, 1786305447, 3953508515, 2466099443, 4105559714, 779131097, 288224004, 3322844775, 4122289132, 2089726849, 656452727, 3096682206, 2217255962, 680183044, 3394288893, 697481839, 1109578150, 2272036063]</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>然后用爆出来的直接写个逆过来的脚本</p>
+<p>因为一共进行了5轮加密，每轮32次加密O(∩_∩)O~~</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">en1 = [2654435769, 1013904242, 3668340011, 2027808484, 387276957]</span><br><span class="line">en2 = [[49, 49, 121, 121, 49, 49, 121, 121, 49, 49, 121, 121, 49, 49, 121, 121, 49, 49, 121, 121, 49, 49, 121, 121, 49, 49, 121, 121, 49, 49, 121, 121], [67, 67, 83, 83, 67, 67, 83, 83, 67, 67, 83, 83, 67, 67, 83, 83, 67, 67, 83, 83, 67, 67, 83, 83, 67, 67, 83, 83, 67, 67, 83, 83], [121, 121, 49, 49, 121, 121, 49, 49, 121, 121, 49, 49, 121, 121, 49, 49, 121, 121, 49, 49, 121, 121, 49, 49, 121, 121, 49, 49, 121, 121, 49, 49], [83, 83, 67, 67, 83, 83, 67, 67, 83, 83, 67, 67, 83, 83, 67, 67, 83, 83, 67, 67, 83, 83, 67, 67, 83, 83, 67, 67, 83, 83, 67, 67], [49, 49, 121, 121, 49, 49, 121, 121, 49, 49, 121, 121, 49, 49, 121, 121, 49, 49, 121, 121, 49, 49, 121, 121, 49, 49, 121, 121, 49, 49, 121, 121]]</span><br><span class="line">en3 = [4108944556, 3404732701, 1466956825, 788072761, 1482427973, 782926647, 1635740553, 4115935911, 2820454423, 3206473923, 1700989382, 2460803532, 2399057278, 968884411, 1298467094, 1786305447, 3953508515, 2466099443, 4105559714, 779131097, 288224004, 3322844775, 4122289132, 2089726849, 656452727, 3096682206, 2217255962, 680183044, 3394288893, 697481839, 1109578150, 2272036063]</span><br><span class="line">for j in list(range(5))[::-1]:</span><br><span class="line">    for i in list(range(32))[::-1]:</span><br><span class="line">        id = [i, i-1, i+1]</span><br><span class="line">        if i-1 &lt; 0:</span><br><span class="line">            id[1] = 31</span><br><span class="line">        if i+1 &gt; 31:</span><br><span class="line">            id[2] = 0</span><br><span class="line">        tt = (((en3[id[1]] &gt;&gt; 3) ^ (en3[id[2]] &lt;&lt; 3)) + ((en3[id[2]] &gt;&gt; 4) ^ (en3[id[1]] &lt;&lt; 2))) ^ ((en3[id[2]] ^ en1[j]) + (en3[id[1]] ^ en2[j][i]))</span><br><span class="line">        en3[id[0]] -= tt &amp; 0xFFFFFFFF</span><br><span class="line">        if en3[id[0]] &lt; 0:</span><br><span class="line">            en3[id[0]] += 0x100000000</span><br><span class="line">print(&quot;&quot;.join([chr(x) for x in en3]))</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>本意是想记录一下自己学cython的过程</p>
+<p>确实挺麻烦的，要自己理逻辑分析，动调真的排上大用场了，感觉自己动调有一点长进吧，至少有的时候知道下在哪了</p>
+<p>现在还不熟悉动调也没关系，多练练就好了b（￣▽￣）d　</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">爱学习居士</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/posts/a9fb130b/">http://example.com/posts/a9fb130b/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://example.com" target="_blank">爱学习居士</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/python%E9%80%86%E5%90%91/">python逆向</a></div><div class="post-share"><div class="social-share" data-image="/image/10.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/posts/a1786872/" title="游戏游戏游戏O(∩_∩)O~~"><img class="cover" src="/image/2.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">游戏游戏游戏O(∩_∩)O~~</div></div><div class="info-2"><div class="info-item-1"> 最近有做到两类不同的游戏类的题，尤其是unity游戏逆向，这个我感觉还挺有意思的，而且近期出现的还蛮多的，浅浅记录一下O(∩_∩)O~~ unity3D它允许开发者通过可视化工具和编程快速构建 2D&#x2F;3D 游戏、动画等内容，并发布到多个平台（如 PC、手机、主机等）。  一大优点是跨平台，支持它能跨平台的得力于两种脚本处理的方式  Mono  传统 C# 解释执行，兼容性好但性能较低（逐渐淘汰）。 构建应用非常快，必须将代码发布成托管程序集（.dll文件，由mono或者.net生成）。  IL2CPP  将 C# 转为 C++ 再编译，提升性能（主流选择，但逆向难度更高）。 相比Mono构建应用慢，可以启用引擎代码剥离（Engine code stripping）来减少代码的大小。 篇文章对这两个部分有很好的解释 Unity之IL2CPP - 知乎 所以对我们做题来说 Momo出包主要逻辑在Assembly-CSharp.dl 这是 Unity 默认将开发者编写的 C#...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/image/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">爱学习居士</div><div class="author-info-description">失之东隅 收之桑榆</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">4</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">3</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">失之东隅 收之桑榆</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#python%E8%A7%A3%E5%8C%85"><span class="toc-text">python解包</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#pyc-encrypted"><span class="toc-text">pyc.encrypted</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%88%91%E7%88%B1%E7%9C%8B%E5%B0%8F%E5%93%81"><span class="toc-text">我爱看小品</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Cython%E9%80%86%E5%90%91"><span class="toc-text">Cython逆向</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#moon"><span class="toc-text">moon</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9D%99%E6%80%81"><span class="toc-text">静态</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%A8%E6%80%81"><span class="toc-text">动态</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#rand0m"><span class="toc-text">rand0m</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-text"></span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ez-cython"><span class="toc-text">ez-cython</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/a9fb130b/" title="被cython逆向肘击"><img src="/image/10.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="被cython逆向肘击"/></a><div class="content"><a class="title" href="/posts/a9fb130b/" title="被cython逆向肘击">被cython逆向肘击</a><time datetime="2025-07-15T11:58:56.000Z" title="发表于 2025-07-15 19:58:56">2025-07-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/a1786872/" title="游戏游戏游戏O(∩_∩)O~~"><img src="/image/2.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="游戏游戏游戏O(∩_∩)O~~"/></a><div class="content"><a class="title" href="/posts/a1786872/" title="游戏游戏游戏O(∩_∩)O~~">游戏游戏游戏O(∩_∩)O~~</a><time datetime="2025-07-08T10:39:25.000Z" title="发表于 2025-07-08 18:39:25">2025-07-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/177574ba/" title="ollvm小记"><img src="/image/5.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ollvm小记"/></a><div class="content"><a class="title" href="/posts/177574ba/" title="ollvm小记">ollvm小记</a><time datetime="2025-05-29T15:46:43.000Z" title="发表于 2025-05-29 23:46:43">2025-05-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/4a17b156/" title="Hello World"><img src="/image/3.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Hello World"/></a><div class="content"><a class="title" href="/posts/4a17b156/" title="Hello World">Hello World</a><time datetime="2025-05-08T12:45:49.984Z" title="发表于 2025-05-08 20:45:49">2025-05-08</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;2025 By 爱学习居士</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.4.0-b1</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><script async src="/js/title.js"></script><script defer src="/live2d-widget-master/autoload.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script>(() => {
+  const destroyAplayer = () => {
+    if (window.aplayers) {
+      for (let i = 0; i < window.aplayers.length; i++) {
+        if (!window.aplayers[i].options.fixed) {
+          window.aplayers[i].destroy()
+        }
+      }
+    }
+  }
+
+  const runMetingJS = () => {
+    typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+  }
+
+  btf.addGlobalFn('pjaxSend', destroyAplayer, 'destroyAplayer')
+  btf.addGlobalFn('pjaxComplete', loadMeting, 'runMetingJS')
+})()</script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>(() => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => fn())
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      const usePjax = true
+      false
+        ? (usePjax ? pjax.loadUrl('/404.html') : window.location.href = '/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})()</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
