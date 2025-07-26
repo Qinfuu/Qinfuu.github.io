@@ -1,0 +1,263 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>ESP定律 | 爱学习居士</title><meta name="author" content="爱学习居士"><meta name="copyright" content="爱学习居士"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="这个本来是寒假看到的，但是当时没太懂，现在正好碰到了练一下手发现不难，真是基础篇。&#x2F;(ㄒoㄒ)&#x2F;~~ 壳，是用来加密软件的技术 首先，壳实质上是一个子程序，它在程序运行时首先取得控制权并对程序进行压缩。同时隐藏程序真正的OEP（程序原始入口点）。 而我们脱壳的目的就是为了找到OEP。 ESP的本质是堆栈平衡。 由于在程序自解密或者自解压过程中, 多数壳会先将当前寄存器状态压栈,">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ESP定律">
+<meta property="og:url" content="http://example.com/posts/7e162ea7/index.html">
+<meta property="og:site_name" content="爱学习居士">
+<meta property="og:description" content="这个本来是寒假看到的，但是当时没太懂，现在正好碰到了练一下手发现不难，真是基础篇。&#x2F;(ㄒoㄒ)&#x2F;~~ 壳，是用来加密软件的技术 首先，壳实质上是一个子程序，它在程序运行时首先取得控制权并对程序进行压缩。同时隐藏程序真正的OEP（程序原始入口点）。 而我们脱壳的目的就是为了找到OEP。 ESP的本质是堆栈平衡。 由于在程序自解密或者自解压过程中, 多数壳会先将当前寄存器状态压栈,">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/image/21.png">
+<meta property="article:published_time" content="2025-07-18T11:55:13.000Z">
+<meta property="article:modified_time" content="2025-07-26T11:16:19.051Z">
+<meta property="article:author" content="爱学习居士">
+<meta property="article:tag" content="脱壳">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/image/21.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "ESP定律",
+  "url": "http://example.com/posts/7e162ea7/",
+  "image": "http://example.com/image/21.png",
+  "datePublished": "2025-07-18T11:55:13.000Z",
+  "dateModified": "2025-07-26T11:16:19.051Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "爱学习居士",
+      "url": "http://example.com/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favixon.jpg"><link rel="canonical" href="http://example.com/posts/7e162ea7/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'ESP定律',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/custom_cursor.css"><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-image: url(/image/photo.png);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/image/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">6</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">5</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/shuoshuo/"><i class="fa-fw far fa-comments"></i><span> 叽里呱啦</span></a></li><li><a class="site-page child" href="/music/"><i class="fa-fw fa fa-music"></i><span> 音乐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/image/21.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/avatar.jpg" alt="Logo"><span class="site-name">爱学习居士</span></a><a class="nav-page-title" href="/"><span class="site-name">ESP定律</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/shuoshuo/"><i class="fa-fw far fa-comments"></i><span> 叽里呱啦</span></a></li><li><a class="site-page child" href="/music/"><i class="fa-fw fa fa-music"></i><span> 音乐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">ESP定律</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-07-18T11:55:13.000Z" title="发表于 2025-07-18 19:55:13">2025-07-18</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-07-26T11:16:19.051Z" title="更新于 2025-07-26 19:16:19">2025-07-26</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E4%BB%8E0%E5%BC%80%E5%A7%8B%E7%9A%84re%E4%B8%96%E7%95%8C/">从0开始的re世界</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>这个本来是寒假看到的，但是当时没太懂，现在正好碰到了练一下手发现不难，真是基础篇。&#x2F;(ㄒoㄒ)&#x2F;~~</p>
+<p>壳，是用来加密软件的技术</p>
+<p>首先，壳实质上是一个子程序，它在程序运行时首先取得控制权并对程序进行压缩。同时隐藏程序真正的OEP（程序原始入口点）。</p>
+<p>而我们脱壳的目的就是为了找到OEP。</p>
+<p>ESP的本质是<code>堆栈平衡</code>。</p>
+<p>由于在程序自解密或者自解压过程中, 多数壳会先将当前寄存器状态压栈, 如使用pushad。</p>
+<p>而在解压结束后, 会将之前的寄存器值出栈, 如使用popad。</p>
+<p>因此在寄存器出栈时, 往往程序代码被恢复, 此时硬件断点触发然后在程序当前位置, 只需要一些单步操作, 就会到达正确的OEP位置.</p>
+<h1 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h1><p>这里使用OD来写</p>
+<p>1.遇到pushad开始就点F8，注意观察OD右上角的寄存器中ESP有没突变成红色。<br>   2.右键“HW break”<br>   4.按一下F9运行程序，直接来到了跳转处，按下F8，看到有突然的跳转，即为OEP。</p>
+<p>下面有一个简单的asp壳，来试一下</p>
+<h2 id="【2022DASCTF-X-SU-】easyre"><a href="#【2022DASCTF-X-SU-】easyre" class="headerlink" title="【2022DASCTF X SU 】easyre"></a>【2022DASCTF X SU 】easyre</h2><p>查文件</p>
+<p><img src="/../textimg/esp%E5%AE%9A%E5%BE%8B.assets/image-20250722105224888.png" alt="image-20250722105224888"></p>
+<p>用32位OD打开，像上面说的方法脱壳，找到OEP之后，右键dump</p>
+<p><img src="/../textimg/esp%E5%AE%9A%E5%BE%8B.assets/image-20250722201153537.png" alt="image-20250722201153537"></p>
+<p>拿到新的程序，进行分析</p>
+<p>我重新命名了一下，里面不难</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">int __cdecl main(int argc, const char **argv, const char **envp)</span><br><span class="line">&#123;</span><br><span class="line">  unsigned __int8 Dest[50]; // [esp+1Ch] [ebp-74h] BYREF</span><br><span class="line">  char Str[50]; // [esp+4Eh] [ebp-42h] BYREF</span><br><span class="line">  __time32_t Time; // [esp+80h] [ebp-10h] BYREF</span><br><span class="line">  int v7; // [esp+84h] [ebp-Ch]</span><br><span class="line">  int v8; // [esp+88h] [ebp-8h]</span><br><span class="line">  struct tm *v9; // [esp+8Ch] [ebp-4h]</span><br><span class="line"></span><br><span class="line">  sub_40DCF0();</span><br><span class="line">  time(&amp;Time);</span><br><span class="line">  v9 = gmtime(&amp;Time);</span><br><span class="line">  scanf(&amp;dword_487F00, Str);</span><br><span class="line">  if ( strlen(Str) != 42 )</span><br><span class="line">  &#123;</span><br><span class="line">    printf_0(&amp;dword_488140, aWrong);</span><br><span class="line">    exit(0);</span><br><span class="line">  &#125;</span><br><span class="line">  if ( Str[0] != &#x27;D&#x27; || Str[1] != &#x27;A&#x27; || Str[2] != &#x27;S&#x27; || Str[3] != &#x27;C&#x27; || Str[4] != &#x27;T&#x27; || Str[5] != &#x27;F&#x27; )</span><br><span class="line">  &#123;</span><br><span class="line">    printf_0(&amp;dword_488140, aWrong);</span><br><span class="line">    exit(0);</span><br><span class="line">  &#125;</span><br><span class="line">  mbscpy(Dest, Str);</span><br><span class="line">  v8 = v9-&gt;tm_year + 1900;</span><br><span class="line">  v7 = 0;</span><br><span class="line">  base58(Str);</span><br><span class="line">  encrypt(Dest);</span><br><span class="line">  system(Command);</span><br><span class="line">  return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>base58里面解出来是假福来哥</p>
+<p>动调在加密函数里面找出数组,记得要换成低位</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">int main()&#123;</span><br><span class="line">    unsigned char ida_chars[] =</span><br><span class="line">            &#123;</span><br><span class="line">                    56,120,221,232,0,175,191,58,107,251,184,12,133,53,92,173,230,0,224,138,29,189,70,210,43,0,21,36,198,173,161,201,123,18,40,0,5,0,114,62,16,161,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,</span><br><span class="line">            &#125;;</span><br><span class="line">    int v2[41];</span><br><span class="line">    v2[0] = -61;</span><br><span class="line">    v2[1] = -128;</span><br><span class="line">    v2[2] = -43;</span><br><span class="line">    v2[3] = -14;</span><br><span class="line">    v2[4] = -101;</span><br><span class="line">    v2[5] = 48;</span><br><span class="line">    v2[6] = 11;</span><br><span class="line">    v2[7] = -76;</span><br><span class="line">    v2[8] = 85;</span><br><span class="line">    v2[9] = -34;</span><br><span class="line">    v2[10] = 34;</span><br><span class="line">    v2[11] = -125;</span><br><span class="line">    v2[12] = 47;</span><br><span class="line">    v2[13] = -105;</span><br><span class="line">    v2[14] = -72;</span><br><span class="line">    v2[15] = 32;</span><br><span class="line">    v2[16] = 29;</span><br><span class="line">    v2[17] = 116;</span><br><span class="line">    v2[18] = -47;</span><br><span class="line">    v2[19] = 1;</span><br><span class="line">    v2[20] = 115;</span><br><span class="line">    v2[21] = 26;</span><br><span class="line">    v2[22] = -78;</span><br><span class="line">    v2[23] = -56;</span><br><span class="line">    v2[24] = -59;</span><br><span class="line">    v2[25] = 116;</span><br><span class="line">    v2[26] = -64;</span><br><span class="line">    v2[27] = 91;</span><br><span class="line">    v2[28] = -9;</span><br><span class="line">    v2[29] = 15;</span><br><span class="line">    v2[30] = -45;</span><br><span class="line">    v2[31] = 1;</span><br><span class="line">    v2[32] = 85;</span><br><span class="line">    v2[33] = -78;</span><br><span class="line">    v2[34] = -92;</span><br><span class="line">    v2[35] = -82;</span><br><span class="line">    v2[36] = 123;</span><br><span class="line">    v2[37] = -84;</span><br><span class="line">    v2[38] = 92;</span><br><span class="line">    v2[39] = 86;</span><br><span class="line">    v2[40] = -68;</span><br><span class="line">    v2[41] = 35;</span><br><span class="line">    char flag[42];</span><br><span class="line">    for (int i =0;i &lt;43 ;i++)</span><br><span class="line">    &#123;</span><br><span class="line">        flag[i] = (v2[i]-71)^ida_chars[i];</span><br><span class="line">        printf(&quot;%c&quot;,flag[i]);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">爱学习居士</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/posts/7e162ea7/">http://example.com/posts/7e162ea7/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://example.com" target="_blank">爱学习居士</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E8%84%B1%E5%A3%B3/">脱壳</a></div><div class="post-share"><div class="social-share" data-image="/image/21.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/posts/3cc884dc/" title="小小vm"><img class="cover" src="/image/19.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">小小vm</div></div><div class="info-2"><div class="info-item-1"> vm正如其名virtual machine也就是虚拟机的意思  如果他要模拟一个机器去执行一个文件的话，必然需要cpu中的寄存器、内存之间的堆栈，然后还要不断的读取指令去执行函数，来模拟执行流。  大概流程就是这样子的 他的伪堆栈和伪寄存器和一些字符串则会放在一个全局变量中，来答到一个模拟机器的效果 我看别人的博客说一般有两种类型的题目 给可执行程序和opcode，逆向emulator，结合opcode文件，推出flag 只给可执行程序，逆向emulator，构造opcode，读取flag 先找了几个简单的练练手 类型一[GKCTF2020]EzMachine32位打开，开局有个花指令不难，可以看到main函数  这些和字符串一起放置的猜测是寄存器  0 11B0函数  eip+1 inc后面可能是寄存器加一，或者是内存地址加一，这里5BD8在字符集的地方也出现了，应该是eip，即eip加1  1 1000函数  mov  这里我把字符集名字修改了一下，借字符集实现现在的操作数放到寄存器里面  2 1070函数 push...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/image/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">爱学习居士</div><div class="author-info-description">失之东隅 收之桑榆</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">6</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">5</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">失之东隅 收之桑榆</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%96%B9%E6%B3%95"><span class="toc-text">方法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E3%80%902022DASCTF-X-SU-%E3%80%91easyre"><span class="toc-text">【2022DASCTF X SU 】easyre</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/7e162ea7/" title="ESP定律"><img src="/image/21.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ESP定律"/></a><div class="content"><a class="title" href="/posts/7e162ea7/" title="ESP定律">ESP定律</a><time datetime="2025-07-18T11:55:13.000Z" title="发表于 2025-07-18 19:55:13">2025-07-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/3cc884dc/" title="小小vm"><img src="/image/19.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="小小vm"/></a><div class="content"><a class="title" href="/posts/3cc884dc/" title="小小vm">小小vm</a><time datetime="2025-07-16T01:48:30.000Z" title="发表于 2025-07-16 09:48:30">2025-07-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/a9fb130b/" title="被cython逆向肘击"><img src="/image/10.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="被cython逆向肘击"/></a><div class="content"><a class="title" href="/posts/a9fb130b/" title="被cython逆向肘击">被cython逆向肘击</a><time datetime="2025-07-15T11:58:56.000Z" title="发表于 2025-07-15 19:58:56">2025-07-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/a1786872/" title="游戏游戏游戏O(∩_∩)O~~"><img src="/image/2.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="游戏游戏游戏O(∩_∩)O~~"/></a><div class="content"><a class="title" href="/posts/a1786872/" title="游戏游戏游戏O(∩_∩)O~~">游戏游戏游戏O(∩_∩)O~~</a><time datetime="2025-07-08T10:39:25.000Z" title="发表于 2025-07-08 18:39:25">2025-07-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/177574ba/" title="ollvm小记"><img src="/image/5.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ollvm小记"/></a><div class="content"><a class="title" href="/posts/177574ba/" title="ollvm小记">ollvm小记</a><time datetime="2025-05-29T15:46:43.000Z" title="发表于 2025-05-29 23:46:43">2025-05-29</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;2025 By 爱学习居士</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.4.0-b1</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><script async src="/js/title.js"></script><script defer src="/live2d-widget-master/autoload.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script>(() => {
+  const destroyAplayer = () => {
+    if (window.aplayers) {
+      for (let i = 0; i < window.aplayers.length; i++) {
+        if (!window.aplayers[i].options.fixed) {
+          window.aplayers[i].destroy()
+        }
+      }
+    }
+  }
+
+  const runMetingJS = () => {
+    typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+  }
+
+  btf.addGlobalFn('pjaxSend', destroyAplayer, 'destroyAplayer')
+  btf.addGlobalFn('pjaxComplete', loadMeting, 'runMetingJS')
+})()</script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>(() => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => fn())
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      const usePjax = true
+      false
+        ? (usePjax ? pjax.loadUrl('/404.html') : window.location.href = '/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})()</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
