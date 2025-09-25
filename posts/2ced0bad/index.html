@@ -1,0 +1,337 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>怎么老是你flutter | 爱学习居士</title><meta name="author" content="爱学习居士"><meta name="copyright" content="爱学习居士"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="最近碰到这个挺多次的了，就想着弄懂一下😋 简介Flutter 是谷歌的移动 UI 框架，建构在Dart VM之上，使用Dart语言开发的移动应用开发框架，可以快速在 iOS 和 Android 上构建高质量的原生用户界面。 现在很多app都是用的该框架构建，而该原生框架是建立在app的native层，所以逆向时需要解包。 认识 Flutter 是什么？ - 简书 Dart VMDart VM 是">
+<meta property="og:type" content="article">
+<meta property="og:title" content="怎么老是你flutter">
+<meta property="og:url" content="http://example.com/posts/2ced0bad/index.html">
+<meta property="og:site_name" content="爱学习居士">
+<meta property="og:description" content="最近碰到这个挺多次的了，就想着弄懂一下😋 简介Flutter 是谷歌的移动 UI 框架，建构在Dart VM之上，使用Dart语言开发的移动应用开发框架，可以快速在 iOS 和 Android 上构建高质量的原生用户界面。 现在很多app都是用的该框架构建，而该原生框架是建立在app的native层，所以逆向时需要解包。 认识 Flutter 是什么？ - 简书 Dart VMDart VM 是">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/image/26.jpg">
+<meta property="article:published_time" content="2025-09-19T11:37:49.000Z">
+<meta property="article:modified_time" content="2025-09-25T13:49:31.419Z">
+<meta property="article:author" content="爱学习居士">
+<meta property="article:tag" content="flutter">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/image/26.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "怎么老是你flutter",
+  "url": "http://example.com/posts/2ced0bad/",
+  "image": "http://example.com/image/26.jpg",
+  "datePublished": "2025-09-19T11:37:49.000Z",
+  "dateModified": "2025-09-25T13:49:31.419Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "爱学习居士",
+      "url": "http://example.com/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favixon.jpg"><link rel="canonical" href="http://example.com/posts/2ced0bad/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '怎么老是你flutter',
+  isHighlightShrink: true,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/custom_cursor.css"><link rel="stylesheet" href="/css/custom.css"><link rel="stylesheet" href="/styles/main.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-image: url(/image/photo.png);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/image/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">10</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">7</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/shuoshuo/"><i class="fa-fw far fa-comments"></i><span> 叽里呱啦</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa fa-link"></i><span> 友人账</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/image/26.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/avatar.jpg" alt="Logo"><span class="site-name">爱学习居士</span></a><a class="nav-page-title" href="/"><span class="site-name">怎么老是你flutter</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/shuoshuo/"><i class="fa-fw far fa-comments"></i><span> 叽里呱啦</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa fa-link"></i><span> 友人账</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">怎么老是你flutter</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-09-19T11:37:49.000Z" title="发表于 2025-09-19 19:37:49">2025-09-19</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-09-25T13:49:31.419Z" title="更新于 2025-09-25 21:49:31">2025-09-25</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%AE%89%E5%8D%93/">安卓</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>最近碰到这个挺多次的了，就想着弄懂一下😋</p>
+<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>Flutter 是谷歌的移动 UI 框架，建构在Dart VM之上，使用Dart语言开发的移动应用开发框架，可以快速在 iOS 和 Android 上构建高质量的原生用户界面。</p>
+<p>现在很多app都是用的该框架构建，而该原生框架是建立在app的<strong>native层</strong>，所以逆向时需要解包。</p>
+<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/8db31a8f45cd">认识 Flutter 是什么？ - 简书</a></p>
+<h2 id="Dart-VM"><a href="#Dart-VM" class="headerlink" title="Dart VM"></a>Dart VM</h2><p>Dart VM 是一个虚拟机，它为高级编程语言提供了执行环境，但它并不意味着在 Dart VM 上执行。它既能JIT即时编译、也能 AOT 提前编译。</p>
+<p>在Dart VM下，AOT将源码转换成机器码打包进libapp.so，AOT 提前跑完后半段并把结果序列化成快照。</p>
+<p><a target="_blank" rel="noopener" href="https://mrale.ph/dartvm/#running-from-snapshots">Dart VM</a></p>
+<h1 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h1><h2 id="无法常规抓包"><a href="#无法常规抓包" class="headerlink" title="无法常规抓包"></a>无法常规抓包</h2><ul>
+<li>Dart语言网络请求不通过代理发送</li>
+</ul>
+<p>​    有的抓包软件是作为中间代理，拦截网关从而获得流量包，而因为Dart语言的这个特点使得app无法正常抓包。</p>
+<p>​    Flutter 的 HTTP 实现默认不读取 Android&#x2F;iOS 的系统代理设置，流量直接走原始 Socket。</p>
+<ul>
+<li>自带SSL校验</li>
+</ul>
+<p>​     Flutter 引擎把 Google 的 BoringSSL 静态编译进 <code>libflutter.so</code>，校验逻辑   在 <code>ssl_crypto_x509_session_verify_cert_chain()</code> 等函数里完成。</p>
+<p>​      它只信任预制在代码或系统目录里的特定公钥&#x2F;指纹，用户安装的 Burp&#x2F;Charles 根证书即使放进系统受信区也照样被拒绝。</p>
+<h2 id="无法正常反编译"><a href="#无法正常反编译" class="headerlink" title="无法正常反编译"></a>无法正常反编译</h2><p>如果按照正常的套路把apk拖到jadx里面会发现MainActivity里什么也没有</p>
+<ul>
+<li>Dart 代码被 AOT 编译成<strong>原生机器码</strong>，而不是常见的字节码</li>
+</ul>
+<p>flutter在release模式下直接把Dart编译成ARM&#x2F;x86机器码存放到libapp.so中。</p>
+<ul>
+<li>代码的形态以Dart快照形式存在</li>
+</ul>
+<h1 id="辨别"><a href="#辨别" class="headerlink" title="辨别"></a>辨别</h1><p>怎么看它是不是flutter框架呢？</p>
+<p>熟悉安卓的朋友都知道， assets文件是资源</p>
+<p><img src="/../textimg/xin.assets/image-20250922121028937.png" alt="image-20250922121028937"></p>
+<p>当你解包打开lib会发现有这两个so文件，有这里两个so文件，很容易辨别</p>
+<p><img src="/../textimg/xin.assets/image-20250922120936759.png" alt="image-20250922120936759"></p>
+<p>在<strong>发布版本</strong>的apk文件里面 libapp.so 保存的是快照，libflutter.so则是引擎，其中包括一个dart的虚拟机。</p>
+<h1 id="对抗"><a href="#对抗" class="headerlink" title="对抗"></a>对抗</h1><h2 id="抓包"><a href="#抓包" class="headerlink" title="抓包"></a>抓包</h2><p><a target="_blank" rel="noopener" href="https://www.52pojie.cn/thread-1951619-1-1.html#51004364_3.flutter%E6%8A%93%E5%8C%85%E5%AF%B9%E6%8A%97">《安卓逆向这档事》番外实战篇3-拨云见日之浅谈Flutter逆向 - 吾爱破解 - 52pojie.cn</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/QiuBaby/article/details/147786426">【Flutter逆向】记一次某灰产APP(Sm**th)的逆向学习-CSDN博客</a></p>
+<p>前两个方法都比较麻烦，我都理解了一下但没有试过。</p>
+<ol>
+<li><p>hook函数过证书校验</p>
+<p>找so文件里找可以绕过ssl验证的函数，用脚本hook，使函数返回true</p>
+</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">function hook_dlopen() &#123;</span><br><span class="line">    var android_dlopen_ext = Module.findExportByName(null, &quot;android_dlopen_ext&quot;);</span><br><span class="line">    Interceptor.attach(android_dlopen_ext, &#123;</span><br><span class="line">        onEnter: function (args) &#123;</span><br><span class="line">            var so_name = args[0].readCString();</span><br><span class="line">            if (so_name.indexOf(&quot;libflutter.so&quot;) &gt;= 0) this.call_hook = true;</span><br><span class="line">        &#125;, onLeave: function (retval) &#123;</span><br><span class="line">            if (this.call_hook) hookFlutter();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function hook_ssl_verify_result(address) &#123;</span><br><span class="line">    Interceptor.attach(address, &#123;</span><br><span class="line">            onEnter: function(args) &#123;</span><br><span class="line">                console.log(&quot;Disabling SSL validation&quot;)</span><br><span class="line">            &#125;,</span><br><span class="line">            onLeave: function(retval) &#123;</span><br><span class="line">                                console.log(&quot;Retval: &quot; + retval);</span><br><span class="line">                retval.replace(0x1);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">function hookFlutter() &#123;</span><br><span class="line">    var m = Process.findModuleByName(&quot;libflutter.so&quot;);</span><br><span class="line">    //利用函数前10字节定位</span><br><span class="line">    var pattern = &quot;FF C3 01 D1 FD 7B 01 A9 FC 6F 02 A9FA 67 03 A9 F8 5F 04 A9 F6 57 05 A9 F4 4F 06 A9 08 0A 80 52 48 00 00 39&quot;;</span><br><span class="line">    var res = Memory.scan(m.base, m.size, pattern, &#123;</span><br><span class="line">        onMatch: function(address, size)&#123;</span><br><span class="line">            console.log(&#x27;[+] ssl_verify_result found at: &#x27; + address.toString());</span><br><span class="line">        // Add 0x01 because it&#x27;s a THUMB function</span><br><span class="line">        // Otherwise, we would get &#x27;Error: unable to intercept function at 0x9906f8ac; please file a bug&#x27;</span><br><span class="line">            hook_ssl_verify_result(address);</span><br><span class="line">        &#125;,</span><br><span class="line">        onError: function(reason)&#123;</span><br><span class="line">            console.log(&#x27;[!] There was an error scanning memory&#x27;);</span><br><span class="line">        &#125;,</span><br><span class="line">        onComplete: function() &#123;</span><br><span class="line">            console.log(&quot;All done&quot;)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li><p>reflutter</p>
+<p>这个还挺麻烦的，还有手动签名什么的</p>
+</li>
+<li><p>Reqable或者proxyPin</p>
+<p>这里我下载了Reqable，只选了独立模式</p>
+<p>这里的证书配置的话，如果有MT那很容易，记得把证书文件权限改为777就可以直接使用了</p>
+</li>
+</ol>
+<p><img src="/../textimg/xin.assets/image-20250923171050692.png" alt="image-20250923171050692"></p>
+<h2 id="反编译"><a href="#反编译" class="headerlink" title="反编译"></a>反编译</h2><p>libapp.so文件里面不止包含了AOT代码，还有Dart快照、Dart VM中的一些信息。</p>
+<p>下面我随便拿了一个文件，试了一下readelf -s 命令</p>
+<p><img src="/../textimg/xin.assets/image-20250923175530477.png" alt="image-20250923175530477"></p>
+<ul>
+<li><strong><code>_kDartVmSnapshotData</code></strong>： 代表 isolate 之间共享的 Dart 堆 (heap) 的初始状态。有助于更快地启动 Dart isolate，但不包含任何 isolate 专属的信息。</li>
+<li><strong><code>_kDartVmSnapshotInstructions</code></strong>：包含 VM 中所有 Dart isolate 之间共享的通用例程的 AOT 指令。这种快照的体积通常非常小，并且大多会包含程序桩 (stub)。</li>
+<li><strong><code>_kDartIsolateSnapshotData</code></strong>：代表 Dart 堆的初始状态，并包含 isolate 专属的信息。</li>
+<li><code>_kDartIsolateSnapshotInstructions</code>：所有 Dart 业务代码编译后的 ARM64 机器码。</li>
+<li><code>_kDartSnapshotBuildId</code>:  快照格式版本+Git Hash，调试&#x2F;校验用</li>
+</ul>
+<p>_kDartIsolateSnapshotInstructions即为我们需要重视的</p>
+<p>由于Dart语言不断的发展，不同版本的Dart引擎其快照格式不同，不论是动态还是静态工具都在更迭。</p>
+<h3 id="动态逆向"><a href="#动态逆向" class="headerlink" title="动态逆向"></a>动态逆向</h3><h4 id="reflutter"><a href="#reflutter" class="headerlink" title="reflutter"></a>reflutter</h4><p><a target="_blank" rel="noopener" href="https://github.com/Impact-I/reFlutter">Impact-I&#x2F;reFlutter: Flutter Reverse Engineering Framework</a></p>
+<p>利用reflutter等工具编译修改过的libflutter.so并且重新打包到APK中，在启动APP的过程中，由修改过的引擎动态链接库将快照数据获取并且保存。</p>
+<p>如果对应的Flutter版本<code>reFlutter</code>还未更新那就只能自己尝试Patch。、</p>
+<h5 id="自己patch"><a href="#自己patch" class="headerlink" title="自己patch"></a>自己patch</h5><p>教程在下面这个链接里</p>
+<p><a target="_blank" rel="noopener" href="https://blog.lleavesg.top/article/Flutter-Reverse#f24e30ab2c284cb9b3fd18f85353b91d">Android-Flutter逆向 | LLeaves Blog</a></p>
+<ol>
+<li><strong>snapshotHash</strong></li>
+</ol>
+<p>我们在libapp.so文件里可以看到关于快照版本的hash，但是具体是多少位看的好麻烦，直接用reflutter里面的脚本运行出来</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python .\get_snapshot_hash.py D:\test\xxx\lib\arm64-v8a\libapp.so</span><br></pre></td></tr></table></figure>
+
+<p><img src="/../textimg/xin.assets/image-20250923220920522.png" alt="image-20250923220920522"></p>
+<ol start="2">
+<li><strong>Engine_commit</strong></li>
+</ol>
+<p>这个Engine_commit则在libflutter.so中找这个我找的好费劲还没找到::&gt;_&lt;::</p>
+<p>有了这两个值之后，在下面的表格里就可以找到flutter和dart的版本</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/Impact-I/reFlutter/blob/main/scripts/enginehash.tmp.csv">reFlutter&#x2F;scripts&#x2F;enginehash.tmp.csv at main · Impact-I&#x2F;reFlutter</a></p>
+<p>蒽，后面的编译好麻烦不是我现在的重点，先溜了。。。</p>
+<h5 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">pip3 install reflutter</span><br><span class="line">reflutter ....\test.apk</span><br><span class="line">java -jar uber-apk-signer-1.2.1.jar --allowResign -a E:\release.RE.apk</span><br><span class="line">adb -d shell &quot;cat /data/data/com.example.test.flutter_demo/dump.dart&quot; &gt; dump.dart</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/A_fanyifan/article/details/139727512">reflutter工具实践之–xx一番赏app_reflutter教程-CSDN博客</a></p>
+<p>得到release.RE.apk之后是要对齐和签名，但是我找的的两个题这两条路都不太通，主要原因是reflutter目前覆盖到3.13左右，我的题是3.19的要手动编译即上面那种方法，等哪天实践成功了回来补一下。</p>
+<p>经过最后一条adb的命令就可以还原dart代码了，然后接下来就能分析了</p>
+<h4 id="flutter逆向助手"><a href="#flutter逆向助手" class="headerlink" title="flutter逆向助手"></a>flutter逆向助手</h4><p>flutter逆向助手是reflutter的上位替代，省去了重新打包的麻烦，使用起来简单很多。直接选择文件之后就能得到反编译的文件。</p>
+<p>[<a target="_blank" rel="noopener" href="https://bbs.kanxue.com/thread-275287.htm">原创]flutter逆向助手-基于reflutter的简易化dart解析工具-Android安全-看雪论坛-安全社区|非营利性质技术交流社区</a></p>
+<p>但是它依然没有解决我的问题，因为支持的版本依旧很低〒▽〒</p>
+<p>reflutter和flutter逆向助手停止更新，flutterSDK过高，两个工具都无法破解，所以又有一个工具blutter，这是一个静态的</p>
+<h3 id="静态逆向"><a href="#静态逆向" class="headerlink" title="静态逆向"></a>静态逆向</h3><h4 id="blutter的配置"><a href="#blutter的配置" class="headerlink" title="blutter的配置"></a>blutter的配置</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/worawit/blutter --depth=1</span><br><span class="line">cd .\blutter\</span><br><span class="line">python .\scripts\init_env_win.py</span><br><span class="line">python .\blutter.py D:\test\xxx\lib\arm64-v8a .\output</span><br></pre></td></tr></table></figure>
+
+<p>其实主要的命令是这几个，还需要ninja环境</p>
+<p>使用最后一个命令的时候，要在x64 Native Tools Command Prompt中运行才能编译</p>
+<p>最后文件会放在output中</p>
+<p>asm 对dart语言的反编译结果，里面有很多dart源代码的对应偏移<br>        ida_script so文件的符号表还原脚本<br>        blutter_frida.js目标应用程序的 frida 脚本模板<br>        objs.txt对象池中对象的完整（嵌套）转储,对象池里面的方法和相应的偏移量<br>        pp.txt对象池中的所有 Dart 对象</p>
+<p><img src="/../textimg/xin.assets/image-20250922211252502.png" alt="image-20250922211252502"></p>
+<p>嗯还有一个点是，生成的addNames.py这个脚本，好像只能在ida7.x或者ida8.x下成功，但是相对于动态的两种，这已经能解决ctf中的绝大部分题目了。</p>
+<h1 id="练习"><a href="#练习" class="headerlink" title="练习"></a>练习</h1><h3 id="2025-Nepctf"><a href="#2025-Nepctf" class="headerlink" title="2025 Nepctf"></a>2025 Nepctf</h3><p>这道题，没办法正常解出来，报错了</p>
+<p>ai说是libapp.so 里找不到符号 _kDartVmSnapshotData，里面是Dart 的一些东西。</p>
+<p><img src="/../textimg/xin.assets/image-20250921211736288.png" alt="image-20250921211736288"></p>
+<p>ida打开在字符串里面意外发现了 _kDartVmSnapshotData</p>
+<p><img src="/../textimg/xin.assets/image-20250925214249763.png" alt="image-20250925214249763"></p>
+<h3 id="2025-WMCTF"><a href="#2025-WMCTF" class="headerlink" title="2025 WMCTF"></a>2025 WMCTF</h3><p><img src="/../textimg/xin.assets/image-20250922205429225.png" alt="image-20250922205429225"></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">爱学习居士</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/posts/2ced0bad/">http://example.com/posts/2ced0bad/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://example.com" target="_blank">爱学习居士</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/flutter/">flutter</a></div><div class="post-share"><div class="social-share" data-image="/image/26.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/posts/cfc19a8b/" title="ssh私钥泄漏靶场"><img class="cover" src="/image/24.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">ssh私钥泄漏靶场</div></div><div class="info-2"><div class="info-item-1">抱着踏踏实实学到哪，弄明白哪的心态完成了老师的作业::&gt;_&lt;:: 前置工作知识SSH 是 Secure Shell 的缩写，是一种加密的网络协议，用于在不安全的网络中安全地远程访问和管理计算机系统。主要作用是远程登录执行命令、安全传输。 默认端口是22 认证方式 密码认证：输入远程用户的密码。 密钥认证（更安全）：使用公私钥对，避免每次输入密码。  所以拥有私钥就能无密码直接登录所有配了对应公钥的服务器，即系统只认钥匙不认人。 准备首先在网上找靶场，下载下来，导入到VMware Workstation Pro中  开启虚拟机，可以看到我们是无法登陆的，因为没有密码  信息搜集首先，打开kali用arp-scan...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/image/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">爱学习居士</div><div class="author-info-description">失之东隅 收之桑榆</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">10</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">7</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">失之东隅 收之桑榆</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-text">简介</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Dart-VM"><span class="toc-text">Dart VM</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%89%B9%E7%82%B9"><span class="toc-text">特点</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%97%A0%E6%B3%95%E5%B8%B8%E8%A7%84%E6%8A%93%E5%8C%85"><span class="toc-text">无法常规抓包</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%97%A0%E6%B3%95%E6%AD%A3%E5%B8%B8%E5%8F%8D%E7%BC%96%E8%AF%91"><span class="toc-text">无法正常反编译</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%BE%A8%E5%88%AB"><span class="toc-text">辨别</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AF%B9%E6%8A%97"><span class="toc-text">对抗</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8A%93%E5%8C%85"><span class="toc-text">抓包</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%8D%E7%BC%96%E8%AF%91"><span class="toc-text">反编译</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%A8%E6%80%81%E9%80%86%E5%90%91"><span class="toc-text">动态逆向</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#reflutter"><span class="toc-text">reflutter</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%87%AA%E5%B7%B1patch"><span class="toc-text">自己patch</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%B7%A5%E5%85%B7"><span class="toc-text">工具</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#flutter%E9%80%86%E5%90%91%E5%8A%A9%E6%89%8B"><span class="toc-text">flutter逆向助手</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9D%99%E6%80%81%E9%80%86%E5%90%91"><span class="toc-text">静态逆向</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#blutter%E7%9A%84%E9%85%8D%E7%BD%AE"><span class="toc-text">blutter的配置</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BB%83%E4%B9%A0"><span class="toc-text">练习</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2025-Nepctf"><span class="toc-text">2025 Nepctf</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2025-WMCTF"><span class="toc-text">2025 WMCTF</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/2ced0bad/" title="怎么老是你flutter"><img src="/image/26.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="怎么老是你flutter"/></a><div class="content"><a class="title" href="/posts/2ced0bad/" title="怎么老是你flutter">怎么老是你flutter</a><time datetime="2025-09-19T11:37:49.000Z" title="发表于 2025-09-19 19:37:49">2025-09-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/cfc19a8b/" title="ssh私钥泄漏靶场"><img src="/image/24.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ssh私钥泄漏靶场"/></a><div class="content"><a class="title" href="/posts/cfc19a8b/" title="ssh私钥泄漏靶场">ssh私钥泄漏靶场</a><time datetime="2025-09-19T08:22:49.000Z" title="发表于 2025-09-19 16:22:49">2025-09-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/d235c08e/" title="nep（未完）"><img src="/image/1.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="nep（未完）"/></a><div class="content"><a class="title" href="/posts/d235c08e/" title="nep（未完）">nep（未完）</a><time datetime="2025-09-08T12:34:21.000Z" title="发表于 2025-09-08 20:34:21">2025-09-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/4eb716cb/" title="lil"><img src="/image/18.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="lil"/></a><div class="content"><a class="title" href="/posts/4eb716cb/" title="lil">lil</a><time datetime="2025-08-24T07:34:12.000Z" title="发表于 2025-08-24 15:34:12">2025-08-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/af13bc4e/" title="日常1"><img src="/image/23.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="日常1"/></a><div class="content"><a class="title" href="/posts/af13bc4e/" title="日常1">日常1</a><time datetime="2025-08-01T02:02:39.000Z" title="发表于 2025-08-01 10:02:39">2025-08-01</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;2025 By 爱学习居士</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.4.0-b1</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><script async src="/js/title.js"></script><script defer src="/live2d-widget-master/autoload.js"></script><script src="/js/sakura.js"></script><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script>(() => {
+  const destroyAplayer = () => {
+    if (window.aplayers) {
+      for (let i = 0; i < window.aplayers.length; i++) {
+        if (!window.aplayers[i].options.fixed) {
+          window.aplayers[i].destroy()
+        }
+      }
+    }
+  }
+
+  const runMetingJS = () => {
+    typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+  }
+
+  btf.addGlobalFn('pjaxSend', destroyAplayer, 'destroyAplayer')
+  btf.addGlobalFn('pjaxComplete', loadMeting, 'runMetingJS')
+})()</script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>(() => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => fn())
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      const usePjax = true
+      false
+        ? (usePjax ? pjax.loadUrl('/404.html') : window.location.href = '/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})()</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
