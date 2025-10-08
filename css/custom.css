@@ -16,6 +16,37 @@ body {
   overflow-x: hidden;
 }
 
+
+/* 调整轮播容器宽度，以占满父容器为例 */
+.swiper {
+  width: 100% !important; /* 使用 !important 确保样式优先级，根据实际情况可省略 */
+  max-width: 1200px; /* 可选，设置最大宽度，防止过宽 */
+}
+
+/* 如果轮播内部的滑块等元素也需要适配宽度，也可调整 */
+.swiper-slide {
+  width: 100% !important;
+}
+
+/* 用父容器提升优先级 */
+#recent-posts #swiperBox {
+  max-width: 1400px !important;
+  width: 90% !important;
+  margin: 0 auto !important;
+}
+
+#recent-posts #swiper_container {
+  width: 100% !important;
+}
+
+/* 若轮播图内部元素有宽度限制，也一并修改 */
+#recent-posts .blog-slider__item {
+  width: 100% !important;
+}
+
+
+
+
 /* 页脚半透明方案 (备用)
 #footer {
   background: rgba(255,255,255,.15);
