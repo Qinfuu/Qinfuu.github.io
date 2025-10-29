@@ -1,6 +1,6 @@
 /* ===== 页脚样式 ===== */
 #footer {
-  background: transparent !important; /* 全透明 */
+  background: transparent !important;
 }
 
 #footer #footer-wrap {
@@ -12,23 +12,20 @@
 }
 
 body {
-  min-height: 100vh; /* 确保 body 至少占据整个视窗的高度 */
+  min-height: 100vh;
   overflow-x: hidden;
 }
 
-
-/* 调整轮播容器宽度，以占满父容器为例 */
+/* 轮播图样式调整 */
 .swiper {
-  width: 100% !important; /* 使用 !important 确保样式优先级，根据实际情况可省略 */
-  max-width: 1200px; /* 可选，设置最大宽度，防止过宽 */
+  width: 100% !important;
+  max-width: 1200px;
 }
 
-/* 如果轮播内部的滑块等元素也需要适配宽度，也可调整 */
 .swiper-slide {
   width: 100% !important;
 }
 
-/* 用父容器提升优先级 */
 #recent-posts #swiperBox {
   max-width: 1400px !important;
   width: 90% !important;
@@ -39,24 +36,88 @@ body {
   width: 100% !important;
 }
 
-/* 若轮播图内部元素有宽度限制，也一并修改 */
 #recent-posts .blog-slider__item {
   width: 100% !important;
 }
 
+/* ----------------------------------------
+   🦋 Butterfly：只让文章页顶部图模糊 + 标题居中
+   ---------------------------------------- */
 
-
-
-/* 页脚半透明方案 (备用)
-#footer {
-  background: rgba(255,255,255,.15);
-  color: #000;
-  border-top-right-radius: 20px;
-  border-top-left-radius: 20px;
-  backdrop-filter: saturate(100%) blur(5px);
+/* 只在文章页应用模糊效果 */
+.post #page-header {
+  position: relative;
+  overflow: hidden;
 }
 
-#footer::before {
-  background: rgba(255,255,255,.15);
+.post #page-header::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  background: rgba(255, 255, 255, 0.12);
+  z-index: 1;
 }
-*/
+
+/* 恢复文章信息显示并居中 */
+.post #page-header .post-meta {
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 2;
+  color: #fff;
+  opacity: 1 !important;
+  visibility: visible !important;
+  margin: 10px 0;
+}
+
+/* 标题字体调大并居中 */
+.post #page-header .post-title {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  font-size: 3.5rem !important; /* 调大字体 */
+  font-weight: 700;
+  color: #fff;
+  margin: 20px 0 15px 0;
+  width: 100%;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3); /* 添加阴影增强可读性 */
+}
+
+/* 确保文章信息中的每个元素都可见 */
+.post #page-header .post-meta .post-meta-date,
+.post #page-header .post-meta .post-meta-categories,
+.post #page-header .post-meta .post-meta-tags,
+.post #page-header .post-meta i,
+.post #page-header .post-meta span,
+.post #page-header .post-meta a {
+  color: #fff !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: inline-block !important;
+  margin: 0 8px;
+}
+
+/* 确保其他页面不受影响 */
+.home #page-header::before,
+.page #page-header::before {
+  display: none !important;
+}
+
+.home #page-header .post-title,
+.page #page-header .post-title {
+  text-align: left !important;
+  font-size: inherit !important; /* 使用默认大小 */
+}
+
+.home #page-header .post-meta,
+.page #page-header .post-meta {
+  justify-content: flex-start !important;
+  text-align: left !important;
+}
