@@ -1,0 +1,363 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>如何成为应急糕手2 | 爱学习居士</title><meta name="author" content="爱学习居士"><meta name="copyright" content="爱学习居士"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="第二届国赛ISW 小路是一名网络安全网管，据反映发现公司主机上有异常外联信息，据回忆前段时间执行过某些更新脚本（已删除），现在需要协助小路同学进行网络安全应急响应分析，查找木马，进一步分析，寻找攻击源头，获取攻击者主机权限获取flag文件。（入口主机请通过ssh进行登录，登录口令为：ubuntu&#x2F;admin_123456，如需root权限请使用sudo；附件第一层解压密码：5e9c5e0">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何成为应急糕手2">
+<meta property="og:url" content="https://qinfuu.github.io/posts/89b4f3de/index.html">
+<meta property="og:site_name" content="爱学习居士">
+<meta property="og:description" content="第二届国赛ISW 小路是一名网络安全网管，据反映发现公司主机上有异常外联信息，据回忆前段时间执行过某些更新脚本（已删除），现在需要协助小路同学进行网络安全应急响应分析，查找木马，进一步分析，寻找攻击源头，获取攻击者主机权限获取flag文件。（入口主机请通过ssh进行登录，登录口令为：ubuntu&#x2F;admin_123456，如需root权限请使用sudo；附件第一层解压密码：5e9c5e0">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://qinfuu.github.io/image/39.jpg">
+<meta property="article:published_time" content="2026-04-23T13:47:08.701Z">
+<meta property="article:modified_time" content="2026-04-23T14:15:02.348Z">
+<meta property="article:author" content="爱学习居士">
+<meta property="article:tag" content="应急">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://qinfuu.github.io/image/39.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "如何成为应急糕手2",
+  "url": "https://qinfuu.github.io/posts/89b4f3de/",
+  "image": "https://qinfuu.github.io/image/39.jpg",
+  "datePublished": "2026-04-23T13:47:08.701Z",
+  "dateModified": "2026-04-23T14:15:02.348Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "爱学习居士",
+      "url": "https://qinfuu.github.io/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favixon.jpg"><link rel="canonical" href="https://qinfuu.github.io/posts/89b4f3de/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '如何成为应急糕手2',
+  isHighlightShrink: true,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/custom_cursor.css"><link rel="stylesheet" href="/css/custom.css"><link rel="stylesheet" href="/styles/main.css"><link rel="stylesheet" href="/css/style.css"><!-- hexo injector head_end start --><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiperstyle.css" media="print" onload="this.media='all'"><!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-image: url(/image/photo.png);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/image/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">18</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">11</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/shuoshuo/"><i class="fa-fw far fa-comments"></i><span> 叽里呱啦</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa fa-link"></i><span> 友人账</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/image/39.jpg);"><nav id="nav"><!-- 左侧博客信息区域--><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/avatar.jpg" alt="Logo"><span class="site-name">爱学习居士</span></a><a class="nav-page-title" href="/"><span class="site-name">如何成为应急糕手2</span></a></span><!-- 新增的导航菜单容器（居中布局关键）--><div id="nav-menus-container"><!-- 菜单主体部分--><div id="menus"><!-- 搜索按钮--><!-- 菜单项--><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/shuoshuo/"><i class="fa-fw far fa-comments"></i><span> 叽里呱啦</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa fa-link"></i><span> 友人账</span></a></div></div></div><!-- 移动端汉堡菜单按钮（保持原位置）--><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">如何成为应急糕手2</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-04-23T13:47:08.701Z" title="发表于 2026-04-23 21:47:08">2026-04-23</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-04-23T14:15:02.348Z" title="更新于 2026-04-23 22:15:02">2026-04-23</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%A6%82%E4%BD%95%E6%88%90%E4%B8%BA%E5%BA%94%E6%80%A5%E7%B3%95%E6%89%8B/">如何成为应急糕手</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><section class="main-hero-waves-area waves-area"><svg class="waves-svg" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto"><defs><path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s58 18 88 18 58-18 88-18 58 18 88 18v44h-352z"></path></defs><g class="parallax"><use href="#gentle-wave" x="48" y="0"></use><use href="#gentle-wave" x="48" y="3"></use><use href="#gentle-wave" x="48" y="5"></use><use href="#gentle-wave" x="48" y="7"></use></g></svg></section><div id="post-top-cover"><div class="blur-background" style="background-image: url(background-image: url(/image/39.jpg);)"></div><img class="nolazyload" id="post-top-bg" src="background-image: url(/image/39.jpg);"></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="第二届国赛ISW"><a href="#第二届国赛ISW" class="headerlink" title="第二届国赛ISW"></a>第二届国赛ISW</h2><blockquote>
+<p>小路是一名网络安全网管，据反映发现公司主机上有异常外联信息，据回忆前段时间执行过某些更新脚本（已删除），现在需要协助小路同学进行网络安全应急响应分析，查找木马，进一步分析，寻找攻击源头，获取攻击者主机权限获取flag文件。（入口主机请通过ssh进行登录，登录口令为：ubuntu&#x2F;admin_123456，如需root权限请使用sudo；附件第一层解压密码：5e9c5e0370a9c29816b44dfbe2ae5a8d，第二层解压密码：81c7e0d7a82ee016e304fb847c31e497）。请根据以下问题进行提交提交：<br>题目1：找出主机上木马回连的主控端服务器IP地址[不定时(3~5分钟)周期性]，并以flag{MD5}形式提交，其中MD5加密目标的原始字符串格式IP:port。<br>题目2：找出主机上驻留的远控木马文件本体，计算该文件的MD5, 结果提交形式： flag{md5}<br>题目3：找出主机上加载远控木马的持久化程序（下载者），其功能为下载并执行远控木马，计算该文件的MD5, 结果提交形式：flag{MD5}。<br>题目4：查找题目3中持久化程序（下载者）的植入痕迹，计算持久化程序植入时的原始名称MD5（仅计算文件名称字符串MD5），并提交对应flag{MD5}。<br>题目5：分析题目2中找到的远控木马，获取木马通信加密密钥, 结果提交形式：flag{通信加密密钥}。<br>题目6：分析题目3中持久化程序（下载者），找到攻击者分发远控木马使用的服务器，并获取该服务器权限，找到flag，结果提交形式：flag{xxxx}。tips：压缩包密码最后一位为.<br>题目7：获取题目2中找到的远控木马的主控端服务器权限，查找flag文件，结果提交形式：flag{xxxx}</p>
+</blockquote>
+<h3 id="题目1"><a href="#题目1" class="headerlink" title="题目1"></a>题目1</h3><p>rstdio打开raw附件，在home下可以看见有一个1.txt打开里面是下载一个system_upgrade这个文件在</p>
+<p><img src="https://b0ochi-1384214950.cos.ap-beijing.myqcloud.com/imags/image-20260401215832092.png" alt="image-20260401215832092"></p>
+<p><img src="https://b0ochi-1384214950.cos.ap-beijing.myqcloud.com/imags/image-20260401220032412.png" alt="image-20260401220032412"></p>
+<p>在同一目录下面可以看见有system-upgrade.service这个文件的完整路径，所以可能是下载的恶意文件执行之后创建了systemd 服务，找到这个文件打开里面只指示到system-upgrade.ko这个elf，恢复文件之后ida打开，查找字符串中里面除了主机地址还有一个地址</p>
+<p><img src="https://b0ochi-1384214950.cos.ap-beijing.myqcloud.com/imags/image-20260401220218030.png" alt="image-20260401220218030"></p>
+<p>192.168.57.203:4948</p>
+<p>所以是flag{59110f555b5e5cd0a8713a447b082d63}</p>
+<p><img src="https://b0ochi-1384214950.cos.ap-beijing.myqcloud.com/imags/image-20260401220517158.png" alt="image-20260401220517158"></p>
+<h3 id="题目2"><a href="#题目2" class="headerlink" title="题目2"></a>题目2</h3><p>远控木马文件应该就是同一函数里面的systemd-agentd</p>
+<p>在字符串中可以看到路径是&#x2F;lib&#x2F;systemd&#x2F;systemd-agentd</p>
+<p>恢复之后用工具查md5值就可以了</p>
+<p><img src="https://b0ochi-1384214950.cos.ap-beijing.myqcloud.com/imags/image-20260402115224258.png" alt="image-20260402115224258"></p>
+<p>flag{bccad26b665ca175cd02aca2903d8b1e}</p>
+<h3 id="题目3"><a href="#题目3" class="headerlink" title="题目3"></a>题目3</h3><p>下载并且执行木马应该是system-upgrade.service这个服务文件</p>
+<p><img src="https://b0ochi-1384214950.cos.ap-beijing.myqcloud.com/imags/image-20260402115755991.png" alt="image-20260402115755991"></p>
+<p>flag{78edba7cbd107eb6e3d2f90f5eca734e}</p>
+<h3 id="题目4"><a href="#题目4" class="headerlink" title="题目4"></a>题目4</h3><p>植入痕迹，应该就是weget这个命令，下载了一个叫.system_upgrade的文件</p>
+<p><img src="https://b0ochi-1384214950.cos.ap-beijing.myqcloud.com/imags/image-20260402120358233.png" alt="image-20260402120358233"></p>
+<p>flag{9729aaace6c83b11b17b6bc3b340d00b}</p>
+<h3 id="题目5"><a href="#题目5" class="headerlink" title="题目5"></a>题目5</h3><p>分析我们拿到的第二个文件，字符串找到通信的函数sub_40641D分析</p>
+<p>密钥地址就是unk_4BEFFD，然后异或一个0x69就能得到flag</p>
+<p><img src="https://b0ochi-1384214950.cos.ap-beijing.myqcloud.com/imags/image-20260402121257212.png" alt="image-20260402121257212"></p>
+<p>flag{ThIS_1S_th3_S3cR3t_fl@g}</p>
+<p>题目6和7好像是渗透，看网上说 是一个rop栈溢出，由于没环境就不复现了</p>
+<h2 id="公交车系统攻击事件排查"><a href="#公交车系统攻击事件排查" class="headerlink" title="公交车系统攻击事件排查"></a>公交车系统攻击事件排查</h2><p>给的两个网址第一个是web服务的，题目描述中给了ssh连接的密码，可以直接连接第二个</p>
+<p><img src="https://b0ochi-1384214950.cos.ap-beijing.myqcloud.com/imags/image-20260402195307329.png" alt="image-20260402195307329"></p>
+<p>然后先查看一下服务和端口，可以看到这里有三个服务，mysql只针对本机开放，然后还有web和ssh，而且可以看到web服务是apache2的，所以可以查看其日志</p>
+<p><img src="https://b0ochi-1384214950.cos.ap-beijing.myqcloud.com/imags/image-20260402195903325.png" alt="image-20260402195903325"></p>
+<blockquote>
+<p>在Linux系统中，Web访问日志的存放位置取决于所使用的Web服务器类型及其配置。大多数情况下，这些日志位于&#x2F;var&#x2F;log目录下，但具体路径会因服务器软件和发行版不同而有所差异。<br>常见Web服务器默认日志路径：<br>Apache HTTP Server<br>Debian&#x2F;Ubuntu 系统：&#x2F;var&#x2F;log&#x2F;apache2&#x2F;access.log<br>RHEL&#x2F;CentOS 系统：&#x2F;var&#x2F;log&#x2F;httpd&#x2F;access_log<br>Nginx  默认路径：&#x2F;var&#x2F;log&#x2F;nginx&#x2F;access.log<br>Lighttpd 默认路径：&#x2F;var&#x2F;log&#x2F;lighttpd&#x2F;access.log</p>
+</blockquote>
+<p>查看日志前面基本都是search.php的文件请求，后面都是shell1.php的，大概是利用search.php里的漏洞然后拿到shell的吧</p>
+<p><img src="https://b0ochi-1384214950.cos.ap-beijing.myqcloud.com/imags/image-20260402221410034.png" alt="image-20260402221410034"></p>
+<p><strong>2.黑客通过获取的用户名密码，利用密码复用技术，爆破了FTP服务，分析流量以后找到开放的FTP端口，并找到黑客登录成功后获取的私密文件，提交其文件中内容，提交格式：flag{xxx}</strong></p>
+<p>在根目录下还有一个pcap流量包</p>
+<p><img src="https://b0ochi-1384214950.cos.ap-beijing.myqcloud.com/imags/image-20260403102119640.png" alt="image-20260403102119640"></p>
+<p>scp提取出来</p>
+<p><img src="https://b0ochi-1384214950.cos.ap-beijing.myqcloud.com/imags/image-20260403104336307.png" alt="image-20260403104336307"></p>
+<p>流量分析可以知道攻击者的ip地址</p>
+<p><img src="https://b0ochi-1384214950.cos.ap-beijing.myqcloud.com/imags/image-20260403104414659.png" alt="image-20260403104414659"></p>
+<h3 id="ftp分析"><a href="#ftp分析" class="headerlink" title="ftp分析"></a>ftp分析</h3><p>wireshark把它当作了TCP协议，而且FTP是有特征的，比如successfully</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tcp.port==2121&amp;&amp;tcp contains &quot;successfully&quot;</span><br></pre></td></tr></table></figure>
+
+<p>在追踪流里面看到wangqing这个用户的密码以及它下载了敏感凭证</p>
+<p><img src="https://b0ochi-1384214950.cos.ap-beijing.myqcloud.com/imags/image-20260403105500687.png" alt="image-20260403105500687"></p>
+<p>私密文件如下</p>
+<p><img src="https://b0ochi-1384214950.cos.ap-beijing.myqcloud.com/imags/image-20260403110245067.png" alt="image-20260403110245067"></p>
+<p>flag{INTERNAL_FTP_ADMIN_PASSWORD&#x3D;FtpP@ssw0rd_For_Admin_Backup_2025}</p>
+<p><strong>3.可恶的黑客找到了任意文件上传点，你需要分析日志和流量以及web开放的程序找到黑客上传的文件，提交木马使用的密码，提交格式：flag{password}</strong></p>
+<h3 id="http分析"><a href="#http分析" class="headerlink" title="http分析"></a>http分析</h3><p>前面一堆都是在base编码的sql语言</p>
+<p><img src="https://b0ochi-1384214950.cos.ap-beijing.myqcloud.com/imags/image-20260403111705562.png" alt="image-20260403111705562"></p>
+<p><img src="https://b0ochi-1384214950.cos.ap-beijing.myqcloud.com/imags/image-20260403111906801.png" alt="image-20260403111906801"></p>
+<p>往后翻可以看到上传了图片马</p>
+<p><img src="https://b0ochi-1384214950.cos.ap-beijing.myqcloud.com/imags/image-20260403111936187.png" alt="image-20260403111936187"></p>
+<p>往下继续追踪流，上传了shell1.php</p>
+<p>密码是woaiwojia，还有key</p>
+<p><img src="https://b0ochi-1384214950.cos.ap-beijing.myqcloud.com/imags/image-20260403112409641.png" alt="image-20260403112409641"></p>
+<p>flag{woaiwojia}</p>
+<p><strong>4.分析流量，黑客植入了一个web挖矿木马，这个木马现实情况下会在用户访问后消耗用户的资源进行挖矿(本环境已做无害化处理)，提交黑客上传这个文件时的初始名称，提交格式：flag{xxx.xxx}</strong></p>
+<p>攻击者是通过web任意文件上传控制了主机权限，然后还请求了27次</p>
+<p>从最后面的数据包开始分析，很明显的哥斯拉加密</p>
+<p><img src="https://b0ochi-1384214950.cos.ap-beijing.myqcloud.com/imags/image-20260403153921079.png" alt="image-20260403153921079"></p>
+<p><img src="https://b0ochi-1384214950.cos.ap-beijing.myqcloud.com/imags/image-20260403154502138.png" alt="image-20260403154502138"></p>
+<p>再往上一点的</p>
+<p><img src="https://b0ochi-1384214950.cos.ap-beijing.myqcloud.com/imags/image-20260403154633945.png" alt="image-20260403154633945"></p>
+<p><img src="https://b0ochi-1384214950.cos.ap-beijing.myqcloud.com/imags/image-20260403154800514.png" alt="image-20260403154800514"></p>
+<p>所以把index.php删掉了换成了map.php</p>
+<p>flag{map.php}</p>
+<p><strong>5.分析流量并上机排查，黑客植入的网页挖矿木马所使用的矿池地址是什么，提交矿池地址(排查完毕后可以尝试删除它)提交格式：flag{xxxxxxx.xxxx.xxx:xxxx}</strong></p>
+<p>访问web服务的index.php，里面有一个混淆代码，拿出来解码直接字符串还原就可以了</p>
+<p><img src="https://b0ochi-1384214950.cos.ap-beijing.myqcloud.com/imags/image-20260403161454422.png" alt="image-20260403161454422"></p>
+<p>所以矿池是gulf.moneroocean.stream:10128</p>
+<p>flag{gulf.moneroocean.stream:10128}</p>
+<h3 id="zui的使用"><a href="#zui的使用" class="headerlink" title="zui的使用"></a>zui的使用</h3><p>安装玩brim之后cmd打开该路径</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brimcap analyze (pcap文件路径) &gt; sample.zng</span><br></pre></td></tr></table></figure>
+
+<p>将生成的zng文件放到zui里面分析</p>
+<p><img src="https://b0ochi-1384214950.cos.ap-beijing.myqcloud.com/imags/image-20260403082244013.png" alt="image-20260403082244013"></p>
+<blockquote>
+<p>count() by id.orig_h | sort -r count   统计每个源IP 的请求数量</p>
+<p>id.orig_h &#x3D;&#x3D; 192.168.1.100    筛选来自源IP 的所有流量</p>
+<p>count() by id.resp_h | sort -r count     统计每个目的IP 接受的请求数</p>
+<p>count() by uri | status_code &#x3D;&#x3D; 200 | sort -r count  每个url成功次数</p>
+<p>uri contains “&#x2F;api&#x2F;“     筛选含有特定的url</p>
+<p>count() by uri | sort -r count | head 10     访问量前十的url</p>
+<p>count() by hour(ts) | sort hour(ts)    按小时统计请求数量</p>
+<p>ts &gt;&#x3D; “2023-10-01 08:00:00” and ts &lt;&#x3D; “2023-10-01 12:00:00”  筛选特定时间</p>
+<p>段的流量</p>
+<p>count() by dayofweek(ts) | sort dayofweek(ts)      统计每天请求量的变化</p>
+<p>count() by status_code | sort -r count    统计不同HTTP状态码的分布</p>
+<p>status_code &gt;&#x3D; 400     筛选所有错误状态码（4xx 客户端错误或 5xx 服务器错误）</p>
+<p>status_code &#x3D;&#x3D; 404 | table id.orig_h, uri, ts     查看特定状态码（如 404 未找到）</p>
+<p>的请求详情</p>
+<p>id.orig_h &#x3D;&#x3D; 10.0.0.5 and status_code &gt;&#x3D; 400 and ts &gt;&#x3D; “2023-10-01 00:00:00”         特定 IP 在特定时间段的错误请求</p>
+<p>count() by id.orig_h, uri | uri &#x3D;&#x3D; “&#x2F;login” and status_code !&#x3D; 200 | sort -r count         统计某 URI 被不同 IP 访问的次数（排除成功请求）</p>
+</blockquote>
+<p>使用count () by id.orig_h,status_code,uri|status_code&#x3D;&#x3D;200 | sort -r count命令查看成功的都是什么，从这里也能看到大部分都是search.php</p>
+<p><img src="https://b0ochi-1384214950.cos.ap-beijing.myqcloud.com/imags/image-20260403102432977.png" alt="image-20260403102432977"></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://qinfuu.github.io">爱学习居士</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://qinfuu.github.io/posts/89b4f3de/">https://qinfuu.github.io/posts/89b4f3de/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://qinfuu.github.io" target="_blank">爱学习居士</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%BA%94%E6%80%A5/">应急</a></div><div class="post-share"><div class="social-share" data-image="/image/39.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/posts/10bda264/" title="如何成为应急糕手1"><img class="cover" src="/image/40.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">如何成为应急糕手1</div></div><div class="info-2"><div class="info-item-1">grep -a    -a 将二进制文件当作文本文件处理 Linux日志通常存储在 &#x2F;var&#x2F;log 目录下，常见的如下：    &#x2F;var&#x2F;log&#x2F;syslog 记录系统的各种信息和错误。    &#x2F;var&#x2F;log&#x2F;auth.log 记录身份验证相关的信息，如登录和认证失败。   &#x2F;var&#x2F;log&#x2F;kern.log 记录内核生成的日志信息。   &#x2F;var&#x2F;log&#x2F;dmesg 记录系统启动时内核产生的消息。   &#x2F;var&#x2F;log&#x2F;boot.log 记录系统启动过程中的消息。   &#x2F;var&#x2F;log&#x2F;messages 记录系统的广泛消息，包括启动和应用程序信息。   &#x2F;var&#x2F;log&#x2F;secure 记录安全相关的消息。   &#x2F;var&#x2F;log&#x2F;httpd&#x2F; 记录Apache...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/posts/10bda264/" title="如何成为应急糕手1"><img class="cover" src="/image/40.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-04-23</div><div class="info-item-2">如何成为应急糕手1</div></div><div class="info-2"><div class="info-item-1">grep -a    -a 将二进制文件当作文本文件处理 Linux日志通常存储在 &#x2F;var&#x2F;log 目录下，常见的如下：    &#x2F;var&#x2F;log&#x2F;syslog 记录系统的各种信息和错误。    &#x2F;var&#x2F;log&#x2F;auth.log 记录身份验证相关的信息，如登录和认证失败。   &#x2F;var&#x2F;log&#x2F;kern.log 记录内核生成的日志信息。   &#x2F;var&#x2F;log&#x2F;dmesg 记录系统启动时内核产生的消息。   &#x2F;var&#x2F;log&#x2F;boot.log 记录系统启动过程中的消息。   &#x2F;var&#x2F;log&#x2F;messages 记录系统的广泛消息，包括启动和应用程序信息。   &#x2F;var&#x2F;log&#x2F;secure 记录安全相关的消息。   &#x2F;var&#x2F;log&#x2F;httpd&#x2F; 记录Apache...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/image/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">爱学习居士</div><div class="author-info-description">失之东隅 收之桑榆</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">18</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">11</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">失之东隅 收之桑榆</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E5%B1%8A%E5%9B%BD%E8%B5%9BISW"><span class="toc-text">第二届国赛ISW</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE1"><span class="toc-text">题目1</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE2"><span class="toc-text">题目2</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE3"><span class="toc-text">题目3</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE4"><span class="toc-text">题目4</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE5"><span class="toc-text">题目5</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AC%E4%BA%A4%E8%BD%A6%E7%B3%BB%E7%BB%9F%E6%94%BB%E5%87%BB%E4%BA%8B%E4%BB%B6%E6%8E%92%E6%9F%A5"><span class="toc-text">公交车系统攻击事件排查</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ftp%E5%88%86%E6%9E%90"><span class="toc-text">ftp分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#http%E5%88%86%E6%9E%90"><span class="toc-text">http分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#zui%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="toc-text">zui的使用</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/89b4f3de/" title="如何成为应急糕手2"><img src="/image/39.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="如何成为应急糕手2"/></a><div class="content"><a class="title" href="/posts/89b4f3de/" title="如何成为应急糕手2">如何成为应急糕手2</a><time datetime="2026-04-23T13:47:08.701Z" title="发表于 2026-04-23 21:47:08">2026-04-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/10bda264/" title="如何成为应急糕手1"><img src="/image/40.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="如何成为应急糕手1"/></a><div class="content"><a class="title" href="/posts/10bda264/" title="如何成为应急糕手1">如何成为应急糕手1</a><time datetime="2026-04-23T13:47:08.689Z" title="发表于 2026-04-23 21:47:08">2026-04-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/749ffdd0/" title="just"><img src="/image/34.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="just"/></a><div class="content"><a class="title" href="/posts/749ffdd0/" title="just">just</a><time datetime="2025-10-27T13:17:22.000Z" title="发表于 2025-10-27 21:17:22">2025-10-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/3c06359a/" title="hack-kid靶场"><img src="/image/32.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="hack-kid靶场"/></a><div class="content"><a class="title" href="/posts/3c06359a/" title="hack-kid靶场">hack-kid靶场</a><time datetime="2025-10-26T07:03:32.000Z" title="发表于 2025-10-26 15:03:32">2025-10-26</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/490db2dd/" title="ycb"><img src="/image/38.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ycb"/></a><div class="content"><a class="title" href="/posts/490db2dd/" title="ycb">ycb</a><time datetime="2025-10-13T12:47:37.000Z" title="发表于 2025-10-13 20:47:37">2025-10-13</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;2025 - 2026 By 爱学习居士</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.4.0-b1</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><script async src="/js/title.js"></script><script defer src="/live2d-widget-master/autoload.js"></script><script src="/js/sakura.js"></script><style> :root { --card-bg:linear-gradient(135deg, rgba(30, 128, 255, 0.3) 0%, rgba(77, 171, 247, 0.3) 100%); } </style><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script>(() => {
+  const destroyAplayer = () => {
+    if (window.aplayers) {
+      for (let i = 0; i < window.aplayers.length; i++) {
+        if (!window.aplayers[i].options.fixed) {
+          window.aplayers[i].destroy()
+        }
+      }
+    }
+  }
+
+  const runMetingJS = () => {
+    typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+  }
+
+  btf.addGlobalFn('pjaxSend', destroyAplayer, 'destroyAplayer')
+  btf.addGlobalFn('pjaxComplete', loadMeting, 'runMetingJS')
+})()</script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>(() => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => fn())
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      const usePjax = true
+      false
+        ? (usePjax ? pjax.loadUrl('/404.html') : window.location.href = '/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})()</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><!-- hexo injector body_end start --> <script data-pjax>if(document.getElementById('recent-posts') && (location.pathname ==='/'|| '/' ==='all')){
+    var parent = document.getElementById('recent-posts');
+    var child = '<div class="recent-post-item" style="width:100%;height: auto"><div id="catalog_magnet"><div class="magnet_item"><a class="magnet_link" href="https://qinfuu.github.io/categories/从0开始的re世界/"><div class="magnet_link_context" style=""><span style="font-weight:500;flex:1">📚 从0开始的re世界 (3)</span><span style="padding:0px 4px;border-radius: 8px;"><i class="fas fa-arrow-circle-right"></i></span></div></a></div><div class="magnet_item"><a class="magnet_link" href="https://qinfuu.github.io/categories/靶场/"><div class="magnet_link_context" style=""><span style="font-weight:500;flex:1">🔑 一些瞎写的靶场 (3)</span><span style="padding:0px 4px;border-radius: 8px;"><i class="fas fa-arrow-circle-right"></i></span></div></a></div><div class="magnet_item"><a class="magnet_link" href="https://qinfuu.github.io/categories/虾写写/"><div class="magnet_link_context" style=""><span style="font-weight:500;flex:1">🦀 虾蟹蟹 (1)</span><span style="padding:0px 4px;border-radius: 8px;"><i class="fas fa-arrow-circle-right"></i></span></div></a></div><div class="magnet_item"><a class="magnet_link" href="https://qinfuu.github.io/categories/复现/"><div class="magnet_link_context" style=""><span style="font-weight:500;flex:1">😨 ？成神之路 (5)</span><span style="padding:0px 4px;border-radius: 8px;"><i class="fas fa-arrow-circle-right"></i></span></div></a></div><div class="magnet_item"><a class="magnet_link" href="https://qinfuu.github.io/categories/编程/"><div class="magnet_link_context" style=""><span style="font-weight:500;flex:1">📒 脚本小子是这样的 (1)</span><span style="padding:0px 4px;border-radius: 8px;"><i class="fas fa-arrow-circle-right"></i></span></div></a></div><div class="magnet_item" style="visibility: hidden"></div><a class="magnet_link_more"  href="https://qinfuu.github.io/categories" style="flex:1;text-align: center;margin-bottom: 10px;">查看更多...</a></div></div>';
+    console.log('已挂载magnet')
+    parent.insertAdjacentHTML("afterbegin",child)}
+     </script><style>#catalog_magnet{flex-wrap: wrap;display: flex;width:100%;justify-content:space-between;padding: 10px 10px 0 10px;align-content: flex-start;}.magnet_item{flex-basis: calc(50% - 5px);background: #f2f2f2;margin-bottom: 10px;border-radius: 8px;transition: all 0.2s ease-in-out;}.magnet_item:hover{background: #b30070}.magnet_link_more{color:#555}.magnet_link{color:black}.magnet_link:hover{color:white}@media screen and (max-width: 600px) {.magnet_item {flex-basis: 100%;}}.magnet_link_context{display:flex;padding: 10px;font-size:16px;transition: all 0.2s ease-in-out;}.magnet_link_context:hover{padding: 10px 20px;}</style>
+    <style></style><script data-pjax>
+  function butterfly_swiper_injector_config(){
+    var parent_div_git = document.getElementById('recent-posts');
+    var item_html = '<div class="recent-post-item" style="height: auto;width: 100%"><div class="blog-slider swiper-container-fade swiper-container-horizontal" id="swiper_container"><div class="blog-slider__wrp swiper-wrapper" style="transition-duration: 0ms;"><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" onclick="pjax.loadUrl(&quot;posts/a1786872/&quot;);" href="javascript:void(0);" alt=""><img width="48" height="48" src="/image/2.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2025-07-08</span><a class="blog-slider__title" onclick="pjax.loadUrl(&quot;posts/a1786872/&quot;);" href="javascript:void(0);" alt="">游戏游戏游戏O(∩_∩)O~~</a><div class="blog-slider__text">unity逆向，列了两种出包方式还有一个I2CppDumper工具</div><a class="blog-slider__button" onclick="pjax.loadUrl(&quot;posts/a1786872/&quot;);" href="javascript:void(0);" alt="">详情       </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" onclick="pjax.loadUrl(&quot;posts/9721c6fb/&quot;);" href="javascript:void(0);" alt=""><img width="48" height="48" src="/image/28.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2025-09-28</span><a class="blog-slider__title" onclick="pjax.loadUrl(&quot;posts/9721c6fb/&quot;);" href="javascript:void(0);" alt="">我不要当脚本小子啊(っ °Д °;)っ</a><div class="blog-slider__text">呃...我不会弃更的</div><a class="blog-slider__button" onclick="pjax.loadUrl(&quot;posts/9721c6fb/&quot;);" href="javascript:void(0);" alt="">详情       </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" onclick="pjax.loadUrl(&quot;posts/2ced0bad/&quot;);" href="javascript:void(0);" alt=""><img width="48" height="48" src="/image/26.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2025-09-25</span><a class="blog-slider__title" onclick="pjax.loadUrl(&quot;posts/2ced0bad/&quot;);" href="javascript:void(0);" alt="">怎么老是你flutter</a><div class="blog-slider__text">灰产app重灾区</div><a class="blog-slider__button" onclick="pjax.loadUrl(&quot;posts/2ced0bad/&quot;);" href="javascript:void(0);" alt="">详情       </a></div></div></div><div class="blog-slider__pagination swiper-pagination-clickable swiper-pagination-bullets"></div></div></div>';
+    console.log('已挂载butterfly_swiper')
+    parent_div_git.insertAdjacentHTML("afterbegin",item_html)
+    }
+  var elist = 'undefined'.split(',');
+  var cpage = location.pathname;
+  var epage = 'all';
+  var flag = 0;
+
+  for (var i=0;i<elist.length;i++){
+    if (cpage.includes(elist[i])){
+      flag++;
+    }
+  }
+
+  if ((epage ==='all')&&(flag == 0)){
+    butterfly_swiper_injector_config();
+  }
+  else if (epage === cpage){
+    butterfly_swiper_injector_config();
+  }
+  </script><script defer src="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper.min.js"></script><script defer data-pjax src="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper_init.js"></script><!-- hexo injector body_end end --></body></html>
